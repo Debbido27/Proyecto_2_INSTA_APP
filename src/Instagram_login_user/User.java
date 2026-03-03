@@ -1,5 +1,6 @@
 
-package instagram_22141094;
+package Instagram_login_user;
+
 
 public class User {
    String username;
