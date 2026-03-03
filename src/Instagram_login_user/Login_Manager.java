@@ -12,7 +12,16 @@ public class Login_Manager {
         users = new User[MAX_USERS];
         totalUsers=0;
         currentUser =null;
+    }
+    
+    public boolean UserExiste(String username){
+        for(User p : users){
+             if(p != null && p.getUsername().equals(username)){
+              return true;   
+             }
+        }
         
+        return false;
     }
     
     
