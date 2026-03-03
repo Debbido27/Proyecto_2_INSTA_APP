@@ -6,9 +6,12 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Insets;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -37,6 +40,13 @@ public class LOGIN  extends JFrame{
         gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets (0,0,0,0);
         
+        gbc.gridx=0;
+        gbc.gridy=0;
+        gbc.weightx=0.7;
+        gbc.weighty=0.3;
+        inicio.add(Fondo(),gbc);
+        
+        return inicio;
         
     }
     
@@ -54,7 +64,20 @@ public class LOGIN  extends JFrame{
         BACKGROUNDTITULO.add(TITULO);
         Fondo.add(BACKGROUNDTITULO,BorderLayout.NORTH);
         
+        ImageIcon icon = new ImageIcon(getClass().getResource("image.jpg"));
+        Image img = icon.getImage();
         
+         JPanel panelImagen = new JPanel() {
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            g.setColor(new Color(12, 15, 20)); 
+            g.fillRect(0, 0, getWidth(), getHeight());
+
+            int x = (getWidth() - img.getWidth(null)) / 2; 
+            g.drawImage(img, x, 0, this);
+        }
+    };
         
         
         
