@@ -90,4 +90,13 @@ public class LOGIN  extends JFrame{
         
         
     }
+    
+    private JPanel DATOS(){
+        JPanel informacion = new JPanel();
+        informacion.setBackground(new Color(21,33,39));
+        informacion.setLayout(new GridBagLayout());
+        
+        
+        
+    }
 }
