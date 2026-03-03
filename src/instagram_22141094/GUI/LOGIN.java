@@ -20,7 +20,7 @@ import javax.swing.JPanel;
 public class LOGIN  extends JFrame{
     
     public LOGIN(){
-        
+     INICIAR();   
     }
     
     private void INICIAR(){
@@ -30,8 +30,12 @@ public class LOGIN  extends JFrame{
         setLocationRelativeTo(null);
         
         CardLayout cd = new CardLayout();
-        JPanel inicar = new JPanel (cd);
+        JPanel iniciar = new JPanel (cd);
         
+        JPanel inicio = INICIO();
+        iniciar.add(inicio,"LOGIN");
+        add(iniciar);
+        cd.show(iniciar,"LOGIN");
     }
     
     private JPanel INICIO(){
@@ -78,8 +82,11 @@ public class LOGIN  extends JFrame{
             g.drawImage(img, x, 0, this);
         }
     };
+         
+        panelImagen.setOpaque(true);
+        Fondo.add(panelImagen,BorderLayout.CENTER);
         
-        
+        return Fondo;
         
         
     }
