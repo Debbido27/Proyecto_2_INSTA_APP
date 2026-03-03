@@ -3,6 +3,8 @@ package instagram_22141094.GUI;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -43,6 +45,19 @@ public class LOGIN  extends JFrame{
         
         JLabel TITULO = new JLabel("INSTAGRAM",JLabel.CENTER);
         TITULO.setFont(new Font("Arial",Font.PLAIN,44));
+        TITULO.setForeground(new Color(0,0,0));
+        
+        JPanel BACKGROUNDTITULO = new JPanel();
+        BACKGROUNDTITULO.setBackground(new Color(12,15,20));
+        BACKGROUNDTITULO.setOpaque(true);
+        BACKGROUNDTITULO.setPreferredSize(new Dimension(0,80));
+        BACKGROUNDTITULO.add(TITULO);
+        Fondo.add(BACKGROUNDTITULO,BorderLayout.NORTH);
+        
+        
+        
+        
+        
         
     }
 }
