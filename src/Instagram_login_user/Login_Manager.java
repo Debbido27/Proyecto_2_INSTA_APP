@@ -25,4 +25,18 @@ public class Login_Manager {
     }
     
     
+    
+    public User buscarUser(String username){
+        for(User p : users){
+            if(p.getUsername().equals(username)){
+               return p ;
+            }
+        }
+        return null;
+    }
+    
+    
+    
+    
+    
 }
