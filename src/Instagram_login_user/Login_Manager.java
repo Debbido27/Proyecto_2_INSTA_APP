@@ -1,6 +1,9 @@
 
 package Instagram_login_user;
 
+import Instagram_login_user.Base_cuenta.AccountType;
+import Instagram_login_user.Base_cuenta.Gender;
+
 public class Login_Manager {
     private static final int MAX_USERS = 50;
     
@@ -35,6 +38,19 @@ public class Login_Manager {
         return null;
     }
     
+    
+    public boolean crearUser (String username, String password, String fullname, Gender gender, int age, AccountType accountType){
+       if(buscarUser(username)!= null){
+           return false;
+       }
+       
+       if(totalUsers>= MAX_USERS){
+           return false;
+       }
+       
+       User nuevo = new User(username, password, fullname, gender, age, accountType);
+       
+    }
     
     
     
