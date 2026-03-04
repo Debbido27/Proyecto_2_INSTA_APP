@@ -1,6 +1,7 @@
 
 package Instagram_login_user;
 
+import Instagram_login_user.Base_cuenta.AccountStatus;
 import Instagram_login_user.Base_cuenta.AccountType;
 import Instagram_login_user.Base_cuenta.Gender;
 
@@ -50,7 +51,24 @@ public class Login_Manager {
        
        User nuevo = new User(username, password, fullname, gender, age, accountType);
        
+       users[totalUsers] = nuevo;
+       totalUsers++;
+       
+       currentUser = nuevo;
+       return true;
+       
     }
+    
+    public boolean login(String username, String password){
+        User u = buscarUser(username);
+        if(u != null && u.getPassword().equals(password) && u.getStatus()==AccountStatus.ACTIVE){
+        currentUser = u;
+        return true;
+        }
+        return false;
+    }
+    
+    
     
     
     
