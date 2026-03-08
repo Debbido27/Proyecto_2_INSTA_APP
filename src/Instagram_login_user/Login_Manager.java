@@ -120,6 +120,25 @@ public class Login_Manager {
         }
     }
     
+    public boolean eliminarUsuario(String username){
+        for (int i = 0; i < totalUsers; i++) {
+            if(users[i]!=null && users[i].getUsername().equals(username)){
+                File userFolder = new File(BASE_FOLDER+"/"+username);
+                borrarCarpeta(userFolder);
+                
+                for (int j = 0; j < totalUsers-1; j++) {
+                    users[j]=users[j+1];
+                }
+                
+                users[totalUsers-1]=null;
+                totalUsers--;
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    
     //METODO RECURSIVO
     private void borrarCarpeta(File folder){
         if(folder.isDirectory()){
