@@ -152,23 +152,25 @@ public class Login_Manager {
     }
     
 
-    private void CrearFolder(String username){
-        File base = new File(BASE_FOLDER);
-        if(!base.exists()){
-            base.mkdir();
-        }
-        
-        File userFolder = new File(base,username);
-        userFolder.mkdir();
-        
-        File profile = new File (userFolder,"profile");
-        File stickers = new File(username,"stickers");
-        File posts = new File(userFolder,"posts");
-        
-        profile.mkdir();
-        stickers.mkdir();
-        posts.mkdir();
+   private void CrearFolder(String username){
+
+    File base = new File(BASE_FOLDER);
+
+    if(!base.exists()){
+        base.mkdir();
     }
+
+    File userFolder = new File(base,username);
+    userFolder.mkdir();
+
+    File profile = new File(userFolder,"profile");
+    File stickers = new File(userFolder,"stickers");
+    File posts = new File(userFolder,"posts");
+
+    profile.mkdir();
+    stickers.mkdir();
+    posts.mkdir();
+   }
  
     public String loginValidar(String username){
         if(UserExiste(username)){
@@ -180,7 +182,7 @@ public class Login_Manager {
     
     
     public void setFotoPerfil(String username, String rutaFoto){
-        File profileFolder = new File(BASE_FOLDER+"/"+username+".profile");
+        File profileFolder = new File(BASE_FOLDER+"/"+username+"/profile");
         
         if(profileFolder.exists()){
             User u = buscarUser(username);
@@ -189,6 +191,52 @@ public class Login_Manager {
             }
         }
     }
+    
+    public User[] buscarUsuariosCoincidentes(String texto){
+    User[] encontrados = new User[50]; 
+    int total = 0;
+
+    try{
+        usersFile.seek(0);
+
+        while(usersFile.getFilePointer() < usersFile.length()){
+            String username = usersFile.readUTF();
+            String password = usersFile.readUTF();
+            String fullname = usersFile.readUTF();
+            String gender = usersFile.readUTF();
+            int age = usersFile.readInt();
+            long date = usersFile.readLong();
+            String status = usersFile.readUTF();
+            String type = usersFile.readUTF();
+            String profile = usersFile.readUTF();
+
+            if(AccountStatus.valueOf(status) != AccountStatus.ACTIVE){
+                continue;
+            }
+
+            if(username.toLowerCase().contains(texto.toLowerCase())){
+                User u = new User(username,password,fullname,
+                        Gender.valueOf(gender), age,
+                        AccountType.valueOf(type));
+                u.setStatus(AccountStatus.valueOf(status));
+                u.setProfilePath(profile);
+
+                encontrados[total] = u;
+                total++;
+            }
+        }
+
+    }catch(IOException e){
+        System.out.println("Error buscando coincidencias");
+    }
+
+    User[] resultado = new User[total];
+    for(int i=0;i<total;i++){
+        resultado[i] = encontrados[i];
+    }
+
+    return resultado;
+}
     
     public boolean eliminarUsuario(String username){
         for (int i = 0; i < totalUsers; i++) {
