@@ -68,7 +68,13 @@ public class Login_Manager {
         return false;
     }
     
-    
+    public boolean loginValidar(String username){
+        if (usuarioExiste(username)) {
+            return "LOGIN";
+       }else{
+           return"Registro";
+       }
+    }
     
     
     
