@@ -164,6 +164,10 @@ public class LOGIN  extends JFrame{
     CREAR.setFocusPainted(false);
     CREAR.setPreferredSize(new Dimension(250,40));
     
+    CREAR.addActionListener(e -> {
+    CardLayout cl = (CardLayout)((JPanel)getContentPane().getComponent(0)).getLayout();
+    cl.show((JPanel)getContentPane().getComponent(0), "REGISTRO");
+});
     // Agregar componentes
     fgbc.gridy = 0;
     formulaPanel.add(USUARIO, fgbc);
@@ -309,7 +313,10 @@ private JPanel REGISTRO(){
     volverBtn.setBorderPainted(false);
     volverBtn.setFocusPainted(false);
     volverBtn.setPreferredSize(new Dimension(250,30));
-    
+    volverBtn.addActionListener(e -> {
+    CardLayout cl = (CardLayout)((JPanel)getContentPane().getComponent(0)).getLayout();
+    cl.show((JPanel)getContentPane().getComponent(0), "LOGIN");
+});
     int row = 0;
     fgbc.gridy = row++;
     formulaRegistro.add(usernameLabel, fgbc);
