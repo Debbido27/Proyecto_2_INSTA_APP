@@ -188,6 +188,16 @@ public class Login_Manager {
            return false;
     }
     
+    
+    public boolean cambiarTipoCuenta(String username, AccountType tipo){
+        User u = buscarUser(username);
+        if(u!=null){
+            u.setAccountType(tipo);
+            return true;
+        }
+        return false;
+    }
+    
  
     
 }
