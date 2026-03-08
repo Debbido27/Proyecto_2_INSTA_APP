@@ -164,6 +164,20 @@ public class Login_Manager {
         return false;
     }
     
+    public boolean cambiarUsername(String usernameA, String newUsername){
+        if(UserExiste(newUsername)){
+            return false;
+        }
+        User u = buscarUser(usernameA);
+        
+        if(u!=null){
+            u.setUsername(newUsername);
+            return true;
+        }
+        
+        return false;
+    }
+    
 }
     
     
