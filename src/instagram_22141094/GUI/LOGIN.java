@@ -36,7 +36,7 @@ public class LOGIN  extends JFrame{
     JPanel iniciar = new JPanel(cd);
     
     JPanel inicio = INICIO(); // Panel de login
-    JPanel registro = REGISTRO(); // Panel de registro
+    JPanel registro = INICIO_REGISTRO(); // Nuevo método
     
     iniciar.add(inicio, "LOGIN");
     iniciar.add(registro, "REGISTRO");
@@ -207,7 +207,7 @@ private JPanel REGISTRO(){
     JPanel formulaRegistro = new JPanel(new GridBagLayout());
     formulaRegistro.setBackground(new Color(21,33,39));
     formulaRegistro.setBorder(null);
-    formulaRegistro.setPreferredSize(new Dimension(300,800));
+    formulaRegistro.setPreferredSize(new Dimension(200,800));
     
     GridBagConstraints fgbc = new GridBagConstraints();
     fgbc.insets = new Insets(8,20,8,20);
@@ -362,6 +362,25 @@ private JPanel REGISTRO(){
     registro.add(formulaRegistro, gbc);
     
     return registro;
+}
+
+private JPanel INICIO_REGISTRO(){
+    JPanel inicio = new JPanel (new GridBagLayout());
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.fill = GridBagConstraints.BOTH;
+    gbc.insets = new Insets (0,0,0,0);
+    
+    gbc.gridx=0;
+    gbc.gridy=0;
+    gbc.weightx=0.7;
+    gbc.weighty=0.3;
+    inicio.add(Fondo(),gbc);
+    
+    gbc.gridx = 1;
+    gbc.weightx = 0.3;
+    gbc.weighty=0.0;
+    inicio.add(REGISTRO(), gbc);
+    return inicio;
 }
         
         
