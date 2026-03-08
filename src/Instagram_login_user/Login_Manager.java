@@ -5,28 +5,46 @@ import Instagram_login_user.Base_cuenta.AccountStatus;
 import Instagram_login_user.Base_cuenta.AccountType;
 import Instagram_login_user.Base_cuenta.Gender;
 import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 
 public class Login_Manager {
-    private static final int MAX_USERS = 50;
     AccountStatus status;
-    private User[] users;
-    private int totalUsers;
+    private RandomAccessFile usersFile;
     private User currentUser;
-    private static final String BASE_FOLDER = "instagram_data";
+    private static final String BASE_FOLDER = "INSTA_RAIZ";
     public Login_Manager(){
-        users = new User[MAX_USERS];
-        totalUsers=0;
-        currentUser =null;
-        this.status=status;
+       
+       try{
+       usersFile = new RandomAccessFile(BASE_FOLDER+"/users.ins","rw");
+       
+       currentUser=null;
+       
+       }catch(IOException e){
+           System.out.println("Error creando archivo de usuarios");
+       }
     }
     
     public boolean UserExiste(String username){
-        for(User p : users){
-             if(p != null && p.getUsername().equals(username)){
-              return true;   
-             }
+        try {
+            while(usersFile.getFilePointer()<usersFile.length()){
+                String user = usersFile.readUTF();
+                usersFile.readUTF();
+                usersFile.readUTF();
+                usersFile.readUTF();
+                usersFile.readInt();
+                usersFile.readLong();
+                usersFile.readUTF();
+                usersFile.readUTF();
+                usersFile.readUTF();
+                
+                if(user.equals(username)){
+                    return true;
+                }
+            }
+        }catch(IOException e){
+            System.out.println("Error Leyendo usuario");
         }
-        
         return false;
     }
     
