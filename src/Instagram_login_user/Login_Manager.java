@@ -208,6 +208,15 @@ public class Login_Manager {
         return false;
     }
     
+    
+    public boolean activarCuenta(String username){
+        User u = buscarUser(username);
+        if(u!=null){
+            u.setStatus(AccountStatus.ACTIVE);
+            return true;
+        }
+        return false;
+    }
  
     
 }
