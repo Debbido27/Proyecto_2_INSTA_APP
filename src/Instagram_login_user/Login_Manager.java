@@ -98,6 +98,18 @@ public class Login_Manager {
     }
     }
     
+    
+    public void setFotoPerfil(String username, String rutaFoto){
+        File profileFolder = new File(BASE_FOLDER+"/"+username+".profile");
+        
+        if(profileFolder.exists()){
+            User u = buscarUser(username);
+            if(u!= null){
+                u.setProfilePath(rutaFoto);
+            }
+        }
+    }
+    
 }
     
     
