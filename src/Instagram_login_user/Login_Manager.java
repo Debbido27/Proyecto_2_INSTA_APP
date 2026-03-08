@@ -198,6 +198,16 @@ public class Login_Manager {
         return false;
     }
     
+    public boolean desactivarCuenta(String username){
+        User u = buscarUser(username);
+        if(u!= null){
+            u.setStatus(AccountStatus.INACTIVE);
+            return true;
+        }
+        
+        return false;
+    }
+    
  
     
 }
