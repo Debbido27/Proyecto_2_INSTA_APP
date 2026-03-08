@@ -54,7 +54,7 @@ public class Login_Manager {
        
        users[totalUsers] = nuevo;
        totalUsers++;
-       
+       CrearFolder(username);
        currentUser = nuevo;
        return true;
        
@@ -63,6 +63,8 @@ public class Login_Manager {
     public boolean login(String username, String password){
         User u = buscarUser(username);
         if(u != null && u.getPassword().equals(password) && u.getStatus()==AccountStatus.ACTIVE){
+            
+            File userFolder = new File(BASE_FOLDER+"/"+username);
         currentUser = u;
         return true;
         }
@@ -87,9 +89,19 @@ public class Login_Manager {
         stickers.mkdir();
         posts.mkdir();
     }
-    
-    
-    
-    
+ 
+    public String loginValidar(String username){
+        if(UserExiste(username)){
+            return "LOGIN";
+        }else{
+      return "REGISTRO";       
+    }
+    }
     
 }
+    
+    
+    
+    
+ 
+
