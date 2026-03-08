@@ -1,6 +1,7 @@
 
 package instagram_22141094.GUI;
 
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -17,7 +18,8 @@ import javax.swing.SwingConstants;
 
 public class PANEL_USUARIO extends JFrame{
    private String usuario;
-   
+   private CardLayout cardLayout;
+    private JPanel contentPanel;
     public PANEL_USUARIO(String usuario){
       this.usuario=usuario;
       principal();
@@ -39,7 +41,7 @@ public class PANEL_USUARIO extends JFrame{
         JPanel menu = new JPanel(new GridBagLayout());
         menu.setBackground(new Color(0,0,0,0));
         menu.setPreferredSize(new Dimension(250,800));
-        menu.setBorder(BorderFactory.createMatteBorder(0,0,0,1 new Color(38, 38, 38)));
+        menu.setBorder(BorderFactory.createMatteBorder(0,0,0,1, new Color(38, 38, 38)));
         
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridwidth = GridBagConstraints.REMAINDER;
@@ -127,5 +129,25 @@ public class PANEL_USUARIO extends JFrame{
         panel.add(label);
         return panel;
     }
+    
+    private JPanel crearSubirPanel(){
+        JPanel panel = new JPanel();
+        panel.setBackground(new Color(18,18,18));
+        JLabel label = new JLabel("Subir publicacion",JLabel.CENTER);
+        label.setFont(new Font("Arial",Font.BOLD,24));
+        label.setForeground(Color.WHITE);
+        panel.add(label);
+        return panel;
+    }
+    
+    private JPanel crearPerfilPanel(){
+    JPanel panel = new JPanel();
+    panel.setBackground(new Color(18, 18, 18));
+    JLabel label = new JLabel("PERFIL DE " + usuario, JLabel.CENTER);
+    label.setFont(new Font("Arial", Font.BOLD, 24));
+    label.setForeground(Color.WHITE);
+    panel.add(label);
+    return panel;
+}
     
 }
