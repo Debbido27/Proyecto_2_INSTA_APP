@@ -98,5 +98,13 @@ public class PANEL_USUARIO extends JFrame{
 
     }
     
-    
+    private JPanel crearFeedPanel(){
+        JPanel panel = new JPanel();
+        panel.setBackground(new Color(18,18,18));
+        JLabel label = new JLabel("Feed posts", JLabel.CENTER);
+        label.setFont(new Font("Arial", Font.BOLD, 24));
+        label.setForeground(Color.WHITE);
+        panel.add(label);
+        return panel;
+    }
 }
