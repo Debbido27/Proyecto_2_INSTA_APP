@@ -12,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 
 public class PANEL_USUARIO extends JFrame{
@@ -73,4 +74,29 @@ public class PANEL_USUARIO extends JFrame{
     return menu;
         
     }
+    
+    private JButton crearBotonMenu(String texto){
+        JButton btn = new JButton(texto);
+        btn.setBackground(new Color(0, 0, 0));
+        btn.setForeground(Color.WHITE);
+        btn.setFont(new Font("Arial", Font.PLAIN, 16));
+        btn.setBorderPainted(false);
+        btn.setFocusPainted(false);
+        btn.setHorizontalAlignment(SwingConstants.LEFT);
+        btn.setPreferredSize(new Dimension(220, 45));
+        
+        btn.addMouseListener(new java.awt.event.MouseAdapter() {
+        public void mouseEntered(java.awt.event.MouseEvent evt) {
+            btn.setBackground(new Color(38, 38, 38));
+        }
+        public void mouseExited(java.awt.event.MouseEvent evt) {
+            btn.setBackground(new Color(0, 0, 0));
+        }
+    });
+    
+    return btn;
+
+    }
+    
+    
 }
