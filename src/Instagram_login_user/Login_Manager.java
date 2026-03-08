@@ -49,14 +49,47 @@ public class Login_Manager {
     }
     
     
+    
+    
     public User buscarUser(String username){
-        for(User p : users){
-            if(p.getUsername().equals(username)){
-               return p ;
+
+    try{
+
+        usersFile.seek(0);
+
+        while(usersFile.getFilePointer() < usersFile.length()){
+
+            String user = usersFile.readUTF();
+            String pass = usersFile.readUTF();
+            String fullname = usersFile.readUTF();
+            String gender = usersFile.readUTF();
+            int age = usersFile.readInt();
+            long date = usersFile.readLong();
+            String status = usersFile.readUTF();
+            String type = usersFile.readUTF();
+            String profile = usersFile.readUTF();
+
+            if(user.equals(username)){
+
+                User u = new User(user,pass,fullname,
+                        Gender.valueOf(gender),
+                        age,
+                        AccountType.valueOf(type));
+
+                u.setStatus(AccountStatus.valueOf(status));
+                u.setProfilePath(profile);
+
+                return u;
             }
+
         }
-        return null;
+
+    }catch(IOException e){
+        System.out.println("Error buscando usuario");
     }
+
+    return null;
+}
     
     
     public boolean crearUser (String username, String password, String fullname, Gender gender, int age, AccountType accountType){
