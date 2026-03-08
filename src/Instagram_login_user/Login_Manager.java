@@ -92,24 +92,43 @@ public class Login_Manager {
 }
     
     
-    public boolean crearUser (String username, String password, String fullname, Gender gender, int age, AccountType accountType){
-       if(buscarUser(username)!= null){
+    
+    
+    public boolean crearUser (String username, String password, String fullname,
+        Gender gender, int age, AccountType accountType){
+
+   try{
+
+       if(UserExiste(username)){
            return false;
        }
-       
-       if(totalUsers>= MAX_USERS){
-           return false;
-       }
-       
-       User nuevo = new User(username, password, fullname, gender, age, accountType);
-       
-       users[totalUsers] = nuevo;
-       totalUsers++;
+
+       usersFile.seek(usersFile.length());
+
+       usersFile.writeUTF(username);
+       usersFile.writeUTF(password);
+       usersFile.writeUTF(fullname);
+       usersFile.writeUTF(gender.toString());
+       usersFile.writeInt(age);
+       usersFile.writeLong(System.currentTimeMillis());
+       usersFile.writeUTF(AccountStatus.ACTIVE.toString());
+       usersFile.writeUTF(accountType.toString());
+       usersFile.writeUTF("");
+
        CrearFolder(username);
-       currentUser = nuevo;
+
+       currentUser = new User(username,password,fullname,gender,age,accountType);
+
        return true;
-       
-    }
+
+   }catch(IOException e){
+       System.out.println("Error creando usuario");
+   }
+
+   return false;
+  }
+    
+    
     
     public boolean userActive(String username){
         User u = buscarUser(username);
