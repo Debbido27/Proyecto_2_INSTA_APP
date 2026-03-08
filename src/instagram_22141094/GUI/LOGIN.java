@@ -27,19 +27,23 @@ public class LOGIN  extends JFrame{
     }
     
     private void INICIAR(){
-        setTitle("INSTAGRAM");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1200,1200);
-        setLocationRelativeTo(null);
-        
-        CardLayout cd = new CardLayout();
-        JPanel iniciar = new JPanel (cd);
-        
-        JPanel inicio = INICIO();
-        iniciar.add(inicio,"LOGIN");
-        add(iniciar);
-        cd.show(iniciar,"LOGIN");
-    }
+    setTitle("INSTAGRAM");
+    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    setSize(1200,1200);
+    setLocationRelativeTo(null);
+    
+    CardLayout cd = new CardLayout();
+    JPanel iniciar = new JPanel(cd);
+    
+    JPanel inicio = INICIO(); // Panel de login
+    JPanel registro = REGISTRO(); // Panel de registro
+    
+    iniciar.add(inicio, "LOGIN");
+    iniciar.add(registro, "REGISTRO");
+    
+    add(iniciar);
+    cd.show(iniciar, "LOGIN");
+}
     
     private JPanel INICIO(){
         JPanel inicio = new JPanel (new GridBagLayout());
