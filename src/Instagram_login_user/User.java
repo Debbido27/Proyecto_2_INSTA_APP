@@ -17,7 +17,8 @@ public class User {
    AccountStatus status;
    AccountType accountType;
    String profilePath;
-     
+   private long creationDate;
+  
     
     
     
@@ -113,5 +114,7 @@ public class User {
       return "Usuario: "+username+"\nContrasena: "+password+"\n";
       
   }
-           
+         
+public void setCreationDate(long date){ this.creationDate = date; }
+public long getCreationDate(){ return this.creationDate; }  
 }

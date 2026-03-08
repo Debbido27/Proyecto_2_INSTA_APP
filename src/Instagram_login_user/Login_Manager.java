@@ -118,7 +118,7 @@ public class Login_Manager {
        CrearFolder(username);
 
        currentUser = new User(username,password,fullname,gender,age,accountType);
-
+       currentUser.setCreationDate(System.currentTimeMillis());
        return true;
 
    }catch(IOException e){
@@ -265,6 +265,8 @@ public class Login_Manager {
                 temp.writeUTF(type);
                 temp.writeUTF(profile);
             } else {
+                long deletionDate = System.currentTimeMillis();
+                System.out.println("Usuario " + username + " eliminado el: " + deletionDate);
                 File userFolder = new File(BASE_FOLDER+"/"+username);
                 borrarCarpeta(userFolder);
                 encontrado = true;
