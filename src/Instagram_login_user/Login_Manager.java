@@ -120,6 +120,20 @@ public class Login_Manager {
         }
     }
     
+    //METODO RECURSIVO
+    private void borrarCarpeta(File folder){
+        if(folder.isDirectory()){
+            File[]files=folder.listFiles();
+            
+            if(files!=null){
+                for(File f :files){
+                    borrarCarpeta(f);
+                }
+            }
+        }
+        folder.delete();
+    }
+    
 }
     
     
