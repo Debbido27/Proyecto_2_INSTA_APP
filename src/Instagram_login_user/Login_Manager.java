@@ -8,7 +8,7 @@ import java.io.File;
 
 public class Login_Manager {
     private static final int MAX_USERS = 50;
-    
+    AccountStatus status;
     private User[] users;
     private int totalUsers;
     private User currentUser;
@@ -17,6 +17,7 @@ public class Login_Manager {
         users = new User[MAX_USERS];
         totalUsers=0;
         currentUser =null;
+        this.status=status;
     }
     
     public boolean UserExiste(String username){
@@ -28,7 +29,6 @@ public class Login_Manager {
         
         return false;
     }
-    
     
     
     public User buscarUser(String username){
@@ -58,6 +58,16 @@ public class Login_Manager {
        currentUser = nuevo;
        return true;
        
+    }
+    
+    public boolean userActive(String username){
+        User u = buscarUser(username);
+        
+        if(u!=null){
+            return u.getStatus()==AccountStatus.ACTIVE;
+        }
+        
+        return false;
     }
     
     public boolean login(String username, String password){
