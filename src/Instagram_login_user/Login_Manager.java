@@ -4,6 +4,7 @@ package Instagram_login_user;
 import Instagram_login_user.Base_cuenta.AccountStatus;
 import Instagram_login_user.Base_cuenta.AccountType;
 import Instagram_login_user.Base_cuenta.Gender;
+import java.io.File;
 
 public class Login_Manager {
     private static final int MAX_USERS = 50;
@@ -11,7 +12,7 @@ public class Login_Manager {
     private User[] users;
     private int totalUsers;
     private User currentUser;
-    
+    private static final String BASE_FOLDER = "instagram_data";
     public Login_Manager(){
         users = new User[MAX_USERS];
         totalUsers=0;
@@ -68,13 +69,25 @@ public class Login_Manager {
         return false;
     }
     
-    public boolean loginValidar(String username){
-        if (usuarioExiste(username)) {
-            return "LOGIN";
-       }else{
-           return"Registro";
-       }
+
+    private void CrearFolder(String username){
+        File base = new File(BASE_FOLDER);
+        if(!base.exists()){
+            base.mkdir();
+        }
+        
+        File userFolder = new File(base,username);
+        userFolder.mkdir();
+        
+        File profile = new File (userFolder,"profile");
+        File stickers = new File(username,"stickers");
+        File posts = new File(userFolder,"posts");
+        
+        profile.mkdir();
+        stickers.mkdir();
+        posts.mkdir();
     }
+    
     
     
     
