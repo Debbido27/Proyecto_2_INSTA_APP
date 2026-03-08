@@ -185,6 +185,8 @@ public class LOGIN  extends JFrame{
         
         return informacion;
     }
+    
+     
         
         
     

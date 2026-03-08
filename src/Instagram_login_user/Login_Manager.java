@@ -152,33 +152,30 @@ public class Login_Manager {
     }
     
 
-   private void CrearFolder(String username){
-
+ private void CrearFolder(String username){
     File base = new File(BASE_FOLDER);
+    if(!base.exists()) base.mkdir();
 
-    if(!base.exists()){
-        base.mkdir();
-    }
-
-    File userFolder = new File(base,username);
+    File userFolder = new File(base, username);
     userFolder.mkdir();
 
-    File profile = new File(userFolder,"profile");
-    File stickers = new File(userFolder,"stickers");
-    File posts = new File(userFolder,"posts");
+    new File(userFolder, "profile").mkdir();
+    new File(userFolder, "stickers").mkdir();
+    new File(userFolder, "posts").mkdir();
+    new File(userFolder, "imagenes").mkdir();
+    new File(userFolder, "folders_personales").mkdir();
+    new File(userFolder, "stickers_personales").mkdir();
 
-    profile.mkdir();
-    stickers.mkdir();
-    posts.mkdir();
-   }
- 
-    public String loginValidar(String username){
-        if(UserExiste(username)){
-            return "LOGIN";
-        }else{
-      return "REGISTRO";       
+    try {
+        new File(userFolder, "followers.ins").createNewFile();
+        new File(userFolder, "following.ins").createNewFile();
+        new File(userFolder, "inbox.ins").createNewFile();
+        new File(userFolder, "insta.ins").createNewFile();
+        new File(userFolder, "stickers.ins").createNewFile();
+    } catch(IOException e){
+        System.out.println("Error creando archivos internos: " + e.getMessage());
     }
-    }
+}
     
     
     public void setFotoPerfil(String username, String rutaFoto){
@@ -239,23 +236,56 @@ public class Login_Manager {
 }
     
     public boolean eliminarUsuario(String username){
-        for (int i = 0; i < totalUsers; i++) {
-            if(users[i]!=null && users[i].getUsername().equals(username)){
+    boolean encontrado = false;
+    try{
+        File tempFile = new File(BASE_FOLDER + "/users_temp.ins");
+        RandomAccessFile temp = new RandomAccessFile(tempFile,"rw");
+
+        usersFile.seek(0);
+
+        while(usersFile.getFilePointer() < usersFile.length()){
+            String user = usersFile.readUTF();
+            String pass = usersFile.readUTF();
+            String fullname = usersFile.readUTF();
+            String gender = usersFile.readUTF();
+            int age = usersFile.readInt();
+            long date = usersFile.readLong();
+            String status = usersFile.readUTF();
+            String type = usersFile.readUTF();
+            String profile = usersFile.readUTF();
+
+            if(!user.equals(username)){
+                temp.writeUTF(user);
+                temp.writeUTF(pass);
+                temp.writeUTF(fullname);
+                temp.writeUTF(gender);
+                temp.writeInt(age);
+                temp.writeLong(date);
+                temp.writeUTF(status);
+                temp.writeUTF(type);
+                temp.writeUTF(profile);
+            } else {
                 File userFolder = new File(BASE_FOLDER+"/"+username);
                 borrarCarpeta(userFolder);
-                
-                for (int j = 0; j < totalUsers-1; j++) {
-                    users[j]=users[j+1];
-                }
-                
-                users[totalUsers-1]=null;
-                totalUsers--;
-                return true;
+                encontrado = true;
             }
         }
-        return false;
+
+        usersFile.close();
+        temp.close();
+
+        File original = new File(BASE_FOLDER + "/users.ins");
+        original.delete();
+        tempFile.renameTo(original);
+
+        usersFile = new RandomAccessFile(BASE_FOLDER+"/users.ins","rw");
+
+    }catch(IOException e){
+        System.out.println("Error eliminando usuario");
     }
-    
+
+    return encontrado;
+}
     
     //METODO RECURSIVO
     private void borrarCarpeta(File folder){
@@ -273,69 +303,318 @@ public class Login_Manager {
     
     
     //CAMBIO DE DATOS
-    public boolean cambiarPassword(String username, String newPassword){
-        User u = buscarUser(username);
-        if(u!=null){
-            u.setPassword(newPassword);
-            return true;
+  public boolean cambiarPassword(String username, String newPassword){
+    boolean modificado = false;
+    try{
+        File tempFile = new File(BASE_FOLDER + "/users_temp.ins");
+        RandomAccessFile temp = new RandomAccessFile(tempFile,"rw");
+
+        usersFile.seek(0);
+
+        while(usersFile.getFilePointer() < usersFile.length()){
+            String user = usersFile.readUTF();
+            String pass = usersFile.readUTF();
+            String fullname = usersFile.readUTF();
+            String gender = usersFile.readUTF();
+            int age = usersFile.readInt();
+            long date = usersFile.readLong();
+            String status = usersFile.readUTF();
+            String type = usersFile.readUTF();
+            String profile = usersFile.readUTF();
+
+            if(user.equals(username)){
+                pass = newPassword;
+                modificado = true;
+            }
+
+            temp.writeUTF(user);
+            temp.writeUTF(pass);
+            temp.writeUTF(fullname);
+            temp.writeUTF(gender);
+            temp.writeInt(age);
+            temp.writeLong(date);
+            temp.writeUTF(status);
+            temp.writeUTF(type);
+            temp.writeUTF(profile);
         }
-        return false;
+
+        usersFile.close();
+        temp.close();
+
+        File original = new File(BASE_FOLDER + "/users.ins");
+        original.delete();
+        tempFile.renameTo(original);
+
+        usersFile = new RandomAccessFile(BASE_FOLDER+"/users.ins","rw");
+
+    }catch(IOException e){
+        System.out.println("Error cambiando password");
     }
-    
+
+    return modificado;
+}
+  
+  
+  
     public boolean cambiarUsername(String usernameA, String newUsername){
-        if(UserExiste(newUsername)){
-            return false;
-        }
-        User u = buscarUser(usernameA);
-        
-        if(u!=null){
-            u.setUsername(newUsername);
-            return true;
-        }
-        
+    if(UserExiste(newUsername)){
         return false;
     }
+    boolean modificado = false;
+    try{
+        File tempFile = new File(BASE_FOLDER + "/users_temp.ins");
+        RandomAccessFile temp = new RandomAccessFile(tempFile,"rw");
+
+        usersFile.seek(0);
+
+        while(usersFile.getFilePointer() < usersFile.length()){
+            String user = usersFile.readUTF();
+            String pass = usersFile.readUTF();
+            String fullname = usersFile.readUTF();
+            String gender = usersFile.readUTF();
+            int age = usersFile.readInt();
+            long date = usersFile.readLong();
+            String status = usersFile.readUTF();
+            String type = usersFile.readUTF();
+            String profile = usersFile.readUTF();
+
+            if(user.equals(usernameA)){
+                user = newUsername;
+                modificado = true;
+                // renombrar carpeta física
+                File oldFolder = new File(BASE_FOLDER+"/"+usernameA);
+                File newFolder = new File(BASE_FOLDER+"/"+newUsername);
+                oldFolder.renameTo(newFolder);
+            }
+
+            temp.writeUTF(user);
+            temp.writeUTF(pass);
+            temp.writeUTF(fullname);
+            temp.writeUTF(gender);
+            temp.writeInt(age);
+            temp.writeLong(date);
+            temp.writeUTF(status);
+            temp.writeUTF(type);
+            temp.writeUTF(profile);
+        }
+
+        usersFile.close();
+        temp.close();
+
+        File original = new File(BASE_FOLDER + "/users.ins");
+        original.delete();
+        tempFile.renameTo(original);
+
+        usersFile = new RandomAccessFile(BASE_FOLDER+"/users.ins","rw");
+
+    }catch(IOException e){
+        System.out.println("Error cambiando username");
+    }
+
+    return modificado;
+}
     
     public boolean cambiarEdad(String username, int newAge){
-        User u = buscarUser(username);
-        
-           if(u!=null){
-            u.setAge(newAge);
-            return true;
+    boolean modificado = false;
+    try{
+        File tempFile = new File(BASE_FOLDER + "/users_temp.ins");
+        RandomAccessFile temp = new RandomAccessFile(tempFile, "rw");
+
+        usersFile.seek(0);
+
+        while(usersFile.getFilePointer() < usersFile.length()){
+            String user = usersFile.readUTF();
+            String pass = usersFile.readUTF();
+            String fullname = usersFile.readUTF();
+            String gender = usersFile.readUTF();
+            int age = usersFile.readInt();
+            long date = usersFile.readLong();
+            String status = usersFile.readUTF();
+            String type = usersFile.readUTF();
+            String profile = usersFile.readUTF();
+
+            if(user.equals(username)){
+                age = newAge; // cambio persistente
+                modificado = true;
+            }
+
+            temp.writeUTF(user);
+            temp.writeUTF(pass);
+            temp.writeUTF(fullname);
+            temp.writeUTF(gender);
+            temp.writeInt(age);
+            temp.writeLong(date);
+            temp.writeUTF(status);
+            temp.writeUTF(type);
+            temp.writeUTF(profile);
         }
-           return false;
+
+        usersFile.close();
+        temp.close();
+
+        File original = new File(BASE_FOLDER + "/users.ins");
+        original.delete();
+        tempFile.renameTo(original);
+
+        usersFile = new RandomAccessFile(BASE_FOLDER + "/users.ins","rw");
+
+    } catch(IOException e){
+        System.out.println("Error cambiando edad: " + e.getMessage());
     }
+    return modificado;
+}
     
     
     public boolean cambiarTipoCuenta(String username, AccountType tipo){
-        User u = buscarUser(username);
-        if(u!=null){
-            u.setAccountType(tipo);
-            return true;
+    boolean modificado = false;
+    try{
+        File tempFile = new File(BASE_FOLDER + "/users_temp.ins");
+        RandomAccessFile temp = new RandomAccessFile(tempFile, "rw");
+
+        usersFile.seek(0);
+
+        while(usersFile.getFilePointer() < usersFile.length()){
+            String user = usersFile.readUTF();
+            String pass = usersFile.readUTF();
+            String fullname = usersFile.readUTF();
+            String gender = usersFile.readUTF();
+            int age = usersFile.readInt();
+            long date = usersFile.readLong();
+            String status = usersFile.readUTF();
+            String type = usersFile.readUTF();
+            String profile = usersFile.readUTF();
+
+            if(user.equals(username)){
+                type = tipo.toString(); 
+                modificado = true;
+            }
+
+            temp.writeUTF(user);
+            temp.writeUTF(pass);
+            temp.writeUTF(fullname);
+            temp.writeUTF(gender);
+            temp.writeInt(age);
+            temp.writeLong(date);
+            temp.writeUTF(status);
+            temp.writeUTF(type);
+            temp.writeUTF(profile);
         }
-        return false;
+
+        usersFile.close();
+        temp.close();
+
+        File original = new File(BASE_FOLDER + "/users.ins");
+        original.delete();
+        tempFile.renameTo(original);
+
+        usersFile = new RandomAccessFile(BASE_FOLDER+"/users.ins","rw");
+
+    } catch(IOException e){
+        System.out.println("Error cambiando tipo de cuenta: " + e.getMessage());
     }
+    return modificado;
+}
     
     public boolean desactivarCuenta(String username){
-        User u = buscarUser(username);
-        if(u!= null){
-            u.setStatus(AccountStatus.INACTIVE);
-            return true;
+    boolean modificado = false;
+    try{
+        File tempFile = new File(BASE_FOLDER + "/users_temp.ins");
+        RandomAccessFile temp = new RandomAccessFile(tempFile, "rw");
+
+        usersFile.seek(0);
+
+        while(usersFile.getFilePointer() < usersFile.length()){
+            String user = usersFile.readUTF();
+            String pass = usersFile.readUTF();
+            String fullname = usersFile.readUTF();
+            String gender = usersFile.readUTF();
+            int age = usersFile.readInt();
+            long date = usersFile.readLong();
+            String status = usersFile.readUTF();
+            String type = usersFile.readUTF();
+            String profile = usersFile.readUTF();
+
+            if(user.equals(username)){
+                status = AccountStatus.INACTIVE.toString(); 
+                modificado = true;
+            }
+
+            temp.writeUTF(user);
+            temp.writeUTF(pass);
+            temp.writeUTF(fullname);
+            temp.writeUTF(gender);
+            temp.writeInt(age);
+            temp.writeLong(date);
+            temp.writeUTF(status);
+            temp.writeUTF(type);
+            temp.writeUTF(profile);
         }
-        
-        return false;
+
+        usersFile.close();
+        temp.close();
+
+        File original = new File(BASE_FOLDER + "/users.ins");
+        original.delete();
+        tempFile.renameTo(original);
+
+        usersFile = new RandomAccessFile(BASE_FOLDER+"/users.ins","rw");
+
+    } catch(IOException e){
+        System.out.println("Error desactivando cuenta: " + e.getMessage());
     }
+    return modificado;
+}
     
-    
-    public boolean activarCuenta(String username){
-        User u = buscarUser(username);
-        if(u!=null){
-            u.setStatus(AccountStatus.ACTIVE);
-            return true;
+   public boolean activarCuenta(String username){
+    boolean modificado = false;
+    try{
+        File tempFile = new File(BASE_FOLDER + "/users_temp.ins");
+        RandomAccessFile temp = new RandomAccessFile(tempFile, "rw");
+
+        usersFile.seek(0);
+
+        while(usersFile.getFilePointer() < usersFile.length()){
+            String user = usersFile.readUTF();
+            String pass = usersFile.readUTF();
+            String fullname = usersFile.readUTF();
+            String gender = usersFile.readUTF();
+            int age = usersFile.readInt();
+            long date = usersFile.readLong();
+            String status = usersFile.readUTF();
+            String type = usersFile.readUTF();
+            String profile = usersFile.readUTF();
+
+            if(user.equals(username)){
+                status = AccountStatus.ACTIVE.toString(); // cambio persistente
+                modificado = true;
+            }
+
+            temp.writeUTF(user);
+            temp.writeUTF(pass);
+            temp.writeUTF(fullname);
+            temp.writeUTF(gender);
+            temp.writeInt(age);
+            temp.writeLong(date);
+            temp.writeUTF(status);
+            temp.writeUTF(type);
+            temp.writeUTF(profile);
         }
-        return false;
+
+        usersFile.close();
+        temp.close();
+
+        File original = new File(BASE_FOLDER + "/users.ins");
+        original.delete();
+        tempFile.renameTo(original);
+
+        usersFile = new RandomAccessFile(BASE_FOLDER+"/users.ins","rw");
+
+    } catch(IOException e){
+        System.out.println("Error activando cuenta: " + e.getMessage());
     }
- 
+    return modificado;
+} 
+    
     
 }
     
