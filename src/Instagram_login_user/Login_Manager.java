@@ -178,6 +178,18 @@ public class Login_Manager {
         return false;
     }
     
+    public boolean cambiarEdad(String username, int newAge){
+        User u = buscarUser(username);
+        
+           if(u!=null){
+            u.setAge(newAge);
+            return true;
+        }
+           return false;
+    }
+    
+ 
+    
 }
     
     
