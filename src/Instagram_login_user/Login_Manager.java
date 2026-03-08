@@ -153,6 +153,17 @@ public class Login_Manager {
         folder.delete();
     }
     
+    
+    //CAMBIO DE DATOS
+    public boolean cambiarPassword(String username, String newPassword){
+        User u = buscarUser(username);
+        if(u!=null){
+            u.setPassword(newPassword);
+            return true;
+        }
+        return false;
+    }
+    
 }
     
     
