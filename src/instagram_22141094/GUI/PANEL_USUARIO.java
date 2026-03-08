@@ -107,4 +107,14 @@ public class PANEL_USUARIO extends JFrame{
         panel.add(label);
         return panel;
     }
+    
+    private JPanel crearBuscarPanel(){
+     JPanel panel = new JPanel();
+    panel.setBackground(new Color(18, 18, 18));
+    JLabel label = new JLabel("🔍 BUSCAR - Perfiles y Hashtags", JLabel.CENTER);
+    label.setFont(new Font("Arial", Font.BOLD, 24));
+    label.setForeground(Color.WHITE);
+    panel.add(label);
+    return panel;
+}
 }
