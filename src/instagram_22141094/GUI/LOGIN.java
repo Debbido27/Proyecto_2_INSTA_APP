@@ -186,7 +186,171 @@ public class LOGIN  extends JFrame{
         return informacion;
     }
     
-     
+private JPanel REGISTRO(){
+    JPanel registro = new JPanel();
+    registro.setBackground(new Color(21,33,39));
+    registro.setLayout(new GridBagLayout());
+    
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.insets = new Insets(10,20,10,20);
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    
+    JPanel formulaRegistro = new JPanel(new GridBagLayout());
+    formulaRegistro.setBackground(new Color(21,33,39));
+    formulaRegistro.setBorder(null);
+    formulaRegistro.setPreferredSize(new Dimension(300,800));
+    
+    GridBagConstraints fgbc = new GridBagConstraints();
+    fgbc.insets = new Insets(8,20,8,20);
+    fgbc.fill = GridBagConstraints.HORIZONTAL;
+    fgbc.gridwidth = GridBagConstraints.REMAINDER;
+    
+    JLabel usernameLabel = new JLabel("Username:");
+    usernameLabel.setFont(new Font("Arial",Font.PLAIN,14));
+    usernameLabel.setForeground(new Color(142,142,142));
+    
+    JTextField usernameField = new JTextField(15);
+    usernameField.setBackground(new Color(109,123,133));
+    usernameField.setPreferredSize(new Dimension(250,35));
+    usernameField.setBorder(BorderFactory.createCompoundBorder(
+        BorderFactory.createLineBorder(new Color(0,0,0)),
+        BorderFactory.createEmptyBorder(5,10,5,10)
+    ));
+    
+    JLabel passLabel = new JLabel("Contraseña:");
+    passLabel.setFont(new Font("Arial",Font.PLAIN,14));
+    passLabel.setForeground(new Color(142,142,142));
+    
+    JTextField passField = new JTextField(15);
+    passField.setBackground(new Color(109,123,133));
+    passField.setPreferredSize(new Dimension(250,35));
+    passField.setBorder(BorderFactory.createCompoundBorder(
+        BorderFactory.createLineBorder(new Color(0,0,0)),
+        BorderFactory.createEmptyBorder(5,10,5,10)
+    ));
+    
+    JLabel nombreLabel = new JLabel("Nombre completo:");
+    nombreLabel.setFont(new Font("Arial",Font.PLAIN,14));
+    nombreLabel.setForeground(new Color(142,142,142));
+    
+    JTextField nombreField = new JTextField(15);
+    nombreField.setBackground(new Color(109,123,133));
+    nombreField.setPreferredSize(new Dimension(250,35));
+    nombreField.setBorder(BorderFactory.createCompoundBorder(
+        BorderFactory.createLineBorder(new Color(0,0,0)),
+        BorderFactory.createEmptyBorder(5,10,5,10)
+    ));
+    
+    JLabel edadLabel = new JLabel("Edad:");
+    edadLabel.setFont(new Font("Arial",Font.PLAIN,14));
+    edadLabel.setForeground(new Color(142,142,142));
+    
+    JTextField edadField = new JTextField(15);
+    edadField.setBackground(new Color(109,123,133));
+    edadField.setPreferredSize(new Dimension(250,35));
+    edadField.setBorder(BorderFactory.createCompoundBorder(
+        BorderFactory.createLineBorder(new Color(0,0,0)),
+        BorderFactory.createEmptyBorder(5,10,5,10)
+    ));
+    
+    JLabel generoLabel = new JLabel("Género:");
+    generoLabel.setFont(new Font("Arial",Font.PLAIN,14));
+    generoLabel.setForeground(new Color(142,142,142));
+    
+    JTextField generoField = new JTextField(15);
+    generoField.setBackground(new Color(109,123,133));
+    generoField.setPreferredSize(new Dimension(250,35));
+    generoField.setBorder(BorderFactory.createCompoundBorder(
+        BorderFactory.createLineBorder(new Color(0,0,0)),
+        BorderFactory.createEmptyBorder(5,10,5,10)
+    ));
+    
+    JLabel tipoLabel = new JLabel("Tipo de cuenta:");
+    tipoLabel.setFont(new Font("Arial",Font.PLAIN,14));
+    tipoLabel.setForeground(new Color(142,142,142));
+    
+    JTextField tipoField = new JTextField(15);
+    tipoField.setBackground(new Color(109,123,133));
+    tipoField.setPreferredSize(new Dimension(250,35));
+    tipoField.setBorder(BorderFactory.createCompoundBorder(
+        BorderFactory.createLineBorder(new Color(0,0,0)),
+        BorderFactory.createEmptyBorder(5,10,5,10)
+    ));
+    
+    JLabel rutaLabel = new JLabel("Ruta foto de perfil:");
+    rutaLabel.setFont(new Font("Arial",Font.PLAIN,14));
+    rutaLabel.setForeground(new Color(142,142,142));
+    
+    JTextField rutaField = new JTextField(15);
+    rutaField.setBackground(new Color(109,123,133));
+    rutaField.setPreferredSize(new Dimension(250,35));
+    rutaField.setBorder(BorderFactory.createCompoundBorder(
+        BorderFactory.createLineBorder(new Color(0,0,0)),
+        BorderFactory.createEmptyBorder(5,10,5,10)
+    ));
+    
+    JButton crearBtn = new JButton("Crear cuenta");
+    crearBtn.setBackground(new Color(0,149,246));
+    crearBtn.setForeground(Color.WHITE);
+    crearBtn.setFont(new Font("Arial",Font.BOLD,14));
+    crearBtn.setBorderPainted(false);
+    crearBtn.setFocusPainted(false);
+    crearBtn.setPreferredSize(new Dimension(250,40));
+    
+    JButton volverBtn = new JButton("Volver al login");
+    volverBtn.setBackground(new Color(100,100,100));
+    volverBtn.setForeground(Color.WHITE);
+    volverBtn.setFont(new Font("Arial",Font.BOLD,12));
+    volverBtn.setBorderPainted(false);
+    volverBtn.setFocusPainted(false);
+    volverBtn.setPreferredSize(new Dimension(250,30));
+    
+    int row = 0;
+    fgbc.gridy = row++;
+    formulaRegistro.add(usernameLabel, fgbc);
+    fgbc.gridy = row++;
+    formulaRegistro.add(usernameField, fgbc);
+    fgbc.gridy = row++;
+    formulaRegistro.add(passLabel, fgbc);
+    fgbc.gridy = row++;
+    formulaRegistro.add(passField, fgbc);
+    fgbc.gridy = row++;
+    formulaRegistro.add(nombreLabel, fgbc);
+    fgbc.gridy = row++;
+    formulaRegistro.add(nombreField, fgbc);
+    fgbc.gridy = row++;
+    formulaRegistro.add(edadLabel, fgbc);
+    fgbc.gridy = row++;
+    formulaRegistro.add(edadField, fgbc);
+    fgbc.gridy = row++;
+    formulaRegistro.add(generoLabel, fgbc);
+    fgbc.gridy = row++;
+    formulaRegistro.add(generoField, fgbc);
+    fgbc.gridy = row++;
+    formulaRegistro.add(tipoLabel, fgbc);
+    fgbc.gridy = row++;
+    formulaRegistro.add(tipoField, fgbc);
+    fgbc.gridy = row++;
+    formulaRegistro.add(rutaLabel, fgbc);
+    fgbc.gridy = row++;
+    formulaRegistro.add(rutaField, fgbc);
+    fgbc.gridy = row++;
+    fgbc.insets = new Insets(20,20,10,20);
+    formulaRegistro.add(crearBtn, fgbc);
+    fgbc.gridy = row++;
+    fgbc.insets = new Insets(5,20,20,20);
+    formulaRegistro.add(volverBtn, fgbc);
+    
+    gbc.gridx = 1;
+    gbc.gridy = 0;
+    gbc.weightx = 0;
+    gbc.weighty = 0;
+    gbc.fill = GridBagConstraints.NONE;
+    gbc.anchor = GridBagConstraints.NORTH;
+    registro.add(formulaRegistro, gbc);
+    
+    return registro;
+}
         
         
     
