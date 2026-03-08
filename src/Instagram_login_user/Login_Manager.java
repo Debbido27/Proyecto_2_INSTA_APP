@@ -13,13 +13,17 @@ public class Login_Manager {
     private RandomAccessFile usersFile;
     private User currentUser;
     private static final String BASE_FOLDER = "INSTA_RAIZ";
+    File base = new File(BASE_FOLDER);
     public Login_Manager(){
-       
+        if(!base.exists()){
+       base.mkdir();
+        }
+        
        try{
        usersFile = new RandomAccessFile(BASE_FOLDER+"/users.ins","rw");
        
        currentUser=null;
-       
+       limpiarUsuariosHuerfanos();
        }catch(IOException e){
            System.out.println("Error creando archivo de usuarios");
        }
@@ -145,6 +149,9 @@ public class Login_Manager {
         if(u != null && u.getPassword().equals(password) && u.getStatus()==AccountStatus.ACTIVE){
             
             File userFolder = new File(BASE_FOLDER+"/"+username);
+            if(!userFolder.exists()){
+                return false;
+            }
         currentUser = u;
         return true;
         }
@@ -617,7 +624,52 @@ public class Login_Manager {
     return modificado;
 } 
     
-    
+    public void limpiarUsuariosHuerfanos() {
+    try {
+        File tempFile = new File(BASE_FOLDER + "/users_temp.ins");
+        RandomAccessFile temp = new RandomAccessFile(tempFile, "rw");
+        
+        usersFile.seek(0);
+        
+        while(usersFile.getFilePointer() < usersFile.length()) {
+            String user = usersFile.readUTF();
+            String pass = usersFile.readUTF();
+            String fullname = usersFile.readUTF();
+            String gender = usersFile.readUTF();
+            int age = usersFile.readInt();
+            long date = usersFile.readLong();
+            String status = usersFile.readUTF();
+            String type = usersFile.readUTF();
+            String profile = usersFile.readUTF();
+            
+            File userFolder = new File(BASE_FOLDER + "/" + user);
+            
+            if(userFolder.exists()) {
+                temp.writeUTF(user);
+                temp.writeUTF(pass);
+                temp.writeUTF(fullname);
+                temp.writeUTF(gender);
+                temp.writeInt(age);
+                temp.writeLong(date);
+                temp.writeUTF(status);
+                temp.writeUTF(type);
+                temp.writeUTF(profile);
+            }
+        }
+        
+        usersFile.close();
+        temp.close();
+        
+        File original = new File(BASE_FOLDER + "/users.ins");
+        original.delete();
+        tempFile.renameTo(original);
+        
+        usersFile = new RandomAccessFile(BASE_FOLDER + "/users.ins", "rw");
+        
+    } catch(IOException e) {
+        System.out.println("Error limpiando usuarios huérfanos: " + e.getMessage());
+    }
+}
 }
     
     

@@ -1,6 +1,10 @@
 
 package instagram_22141094.GUI;
-
+import javax.swing.JOptionPane;
+import Instagram_login_user.Login_Manager;
+import Instagram_login_user.Base_cuenta.Gender;
+import Instagram_login_user.Base_cuenta.AccountType;
+import Instagram_login_user.Login_Manager;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
@@ -16,14 +20,16 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-
 public class LOGIN  extends JFrame{
-    
+    Login_Manager loginManager;
     public LOGIN(){
+     loginManager = new Login_Manager();
      INICIAR();   
+     
     }
     
     private void INICIAR(){
@@ -191,6 +197,40 @@ public class LOGIN  extends JFrame{
     gbc.fill = GridBagConstraints.NONE;
     gbc.anchor = GridBagConstraints.NORTH;
     informacion.add(formulaPanel, gbc);
+    
+    
+    LOGIN.addActionListener(e -> {
+    String usuario = campoUsuario.getText().trim(); // <-- AGREGAR .trim()
+    String contrasena = CONTRA.getText().trim(); // <-- AGREGAR .trim()
+    
+    // Validar campos vacíos
+    if(usuario.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "El campo de usuario está vacío");
+        campoUsuario.requestFocus();
+        return;
+    }
+    
+    if(contrasena.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "El campo de contraseña está vacío");
+        CONTRA.requestFocus();
+        return;
+    }
+    
+    try {
+        if(loginManager.login(usuario, contrasena)) {
+            // Login exitoso - mostrar panel en blanco
+           
+               PANEL_USUARIO pn = new PANEL_USUARIO(usuario);
+                pn.setVisible(true);                
+
+        } else {
+            JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos");
+        }
+    } catch(NullPointerException ex) {
+        JOptionPane.showMessageDialog(this, "Error al conectar con la base de datos. Asegúrate de crear la carpeta INSTA_RAIZ");
+    }
+});
+    
     
     return informacion;
 }
@@ -361,6 +401,109 @@ private JPanel REGISTRO(){
     gbc.anchor = GridBagConstraints.NORTH;
     registro.add(formulaRegistro, gbc);
     
+    
+    crearBtn.addActionListener(e -> {
+    // Obtener textos y eliminar espacios al inicio y final con .trim()
+    String username = usernameField.getText().trim();
+    String password = passField.getText().trim();
+    String fullname = nombreField.getText().trim();
+    String edadTexto = edadField.getText().trim();
+    String generoTexto = generoField.getText().trim();
+    String tipoTexto = tipoField.getText().trim();
+    String rutaFoto = rutaField.getText().trim();
+    
+    // Validar que ningún campo obligatorio esté vacío
+    if(username.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "El campo Username está vacío");
+        usernameField.requestFocus();
+        return;
+    }
+    
+    if(password.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "El campo Contraseña está vacío");
+        passField.requestFocus();
+        return;
+    }
+    
+    if(fullname.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "El campo Nombre completo está vacío");
+        nombreField.requestFocus();
+        return;
+    }
+    
+    if(edadTexto.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "El campo Edad está vacío");
+        edadField.requestFocus();
+        return;
+    }
+    
+    if(generoTexto.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "El campo Género está vacío");
+        generoField.requestFocus();
+        return;
+    }
+    
+    if(tipoTexto.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "El campo Tipo de cuenta está vacío");
+        tipoField.requestFocus();
+        return;
+    }
+    
+    try {
+        int edad = Integer.parseInt(edadTexto);
+        if(edad <= 0 || edad > 120) {
+            JOptionPane.showMessageDialog(this, "Edad no válida (debe ser entre 1 y 120)");
+            edadField.requestFocus();
+            return;
+        }
+        
+        Gender genero;
+        AccountType tipo;
+        
+        try {
+            genero = Gender.valueOf(generoTexto.toUpperCase());
+        } catch(IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(this, "Género inválido. Use: MASCULINO, FEMENINO, u OTRO");
+            generoField.requestFocus();
+            return;
+        }
+        
+        try {
+            tipo = AccountType.valueOf(tipoTexto.toUpperCase());
+        } catch(IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(this, "Tipo de cuenta inválido. Use: PUBLIC o PRIVATE");
+            tipoField.requestFocus();
+            return;
+        }
+        
+        boolean creado = loginManager.crearUser(username, password, fullname, genero, edad, tipo);
+        
+        if(creado) {
+            if(!rutaFoto.isEmpty()) {
+                loginManager.setFotoPerfil(username, rutaFoto);
+            }
+            
+            JOptionPane.showMessageDialog(this, "Usuario creado exitosamente");
+            
+            CardLayout cl = (CardLayout)((JPanel)getContentPane().getComponent(0)).getLayout();
+            cl.show((JPanel)getContentPane().getComponent(0), "LOGIN");
+            
+            // Limpiar campos
+            usernameField.setText("");
+            passField.setText("");
+            nombreField.setText("");
+            edadField.setText("");
+            generoField.setText("");
+            tipoField.setText("");
+            rutaField.setText("");
+        } else {
+            JOptionPane.showMessageDialog(this, "El usuario ya existe");
+        }
+    } catch(NumberFormatException ex) {
+        JOptionPane.showMessageDialog(this, "Edad debe ser un número válido");
+        edadField.requestFocus();
+    }
+});
     return registro;
 }
 
