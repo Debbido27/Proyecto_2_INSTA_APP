@@ -12,11 +12,14 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Insets;
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -63,7 +66,8 @@ public class PANEL_USUARIO extends JPanel{
     contentPanel.add(crearInboxPanel(), "INBOX");
     contentPanel.add(crearPerfilPanel(), "PERFIL");
     contentPanel.add(crearSubirPanel(), "SUBIR");
-    
+    contentPanel.add(crearPerfilMainPanel(), "PERFIL_MAIN");
+
     mainPanel.add(contentPanel, BorderLayout.CENTER);
     
     add(mainPanel);
@@ -97,7 +101,12 @@ public class PANEL_USUARIO extends JPanel{
         feedBtn.addActionListener(e -> cardLayout.show(contentPanel, "FEED"));
         buscarBtn.addActionListener(e -> cardLayout.show(contentPanel, "BUSCAR"));
         inboxBtn.addActionListener(e -> cardLayout.show(contentPanel, "INBOX"));
-        perfilBtn.addActionListener(e -> cardLayout.show(contentPanel, "PERFIL"));
+        perfilBtn.addActionListener(e -> {
+            userActual = loginManager.buscarUser(usuario);
+            contentPanel.remove(contentPanel.getComponentCount() - 1); // remueve PERFIL_MAIN viejo
+            contentPanel.add(crearPerfilMainPanel(), "PERFIL_MAIN");
+            cardLayout.show(contentPanel, "PERFIL_MAIN");
+        });      
         subirBtn.addActionListener(e -> cardLayout.show(contentPanel, "SUBIR"));
 
         gbc.insets = new Insets(20, 15, 20, 15);
@@ -307,32 +316,26 @@ edadField.setEditable(true);
     fotoLabel.setForeground(Color.WHITE);
     panel.add(fotoLabel, gbc);
     
+    
+    ///
     JPanel fotoPanel = new JPanel(new BorderLayout());
     fotoPanel.setBackground(new Color(54, 54, 54));
-    
-    JLabel rutaFotoLabel = new JLabel(userActual != null && !userActual.getProfilePath().isEmpty() ? 
-                                      userActual.getProfilePath() : "Sin foto");
-    rutaFotoLabel.setForeground(Color.LIGHT_GRAY);
-    rutaFotoLabel.setFont(new Font("Arial", Font.ITALIC, 12));
-    fotoPanel.add(rutaFotoLabel, BorderLayout.CENTER);
-    
-    JButton seleccionarFotoBtn = new JButton("Seleccionar");
-    seleccionarFotoBtn.setBackground(new Color(0, 149, 246));
-    seleccionarFotoBtn.setForeground(Color.WHITE);
-    seleccionarFotoBtn.setFont(new Font("Arial", Font.BOLD, 12));
-    seleccionarFotoBtn.setBorderPainted(false);
-    seleccionarFotoBtn.addActionListener(e -> {
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        fileChooser.setDialogTitle("Seleccionar foto de perfil");
-        if(fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            String ruta = fileChooser.getSelectedFile().getAbsolutePath();
-            rutaFotoLabel.setText(ruta);
-        }
-    });
-    fotoPanel.add(seleccionarFotoBtn, BorderLayout.EAST);
-    
+    fotoPanel.setPreferredSize(new Dimension(300, 40));
+    JTextField rutaFotoField = new JTextField("");
+    rutaFotoField.setPreferredSize(new Dimension(300, 35));
+
+    rutaFotoField.setBackground(new Color(54, 54, 54));
+    rutaFotoField.setForeground(Color.WHITE);
+    rutaFotoField.setFont(new Font("Arial", Font.PLAIN, 12));
+    rutaFotoField.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+    rutaFotoField.setEditable(true);
+    fotoPanel.add(rutaFotoField, BorderLayout.CENTER);
+
     panel.add(fotoPanel, gbc);
+    
+    //
+    
+    
     
     // Cambiar contraseña
     JLabel passLabel = new JLabel("Cambiar contraseña:");
@@ -398,9 +401,21 @@ edadField.setEditable(true);
         if(nuevoTipo != userActual.getAccountType())
             loginManager.cambiarTipoCuenta(usuario, nuevoTipo);
 
+        String nuevaRuta = rutaFotoField.getText().trim();
+        if(!nuevaRuta.isEmpty()) {
+            File archivo = new File(nuevaRuta);
+            if(archivo.exists()) {
+                loginManager.setFotoPerfil(usuario, nuevaRuta);
+            } else {
+                JOptionPane.showMessageDialog(this, "Ruta de foto no válida, se mantendrá la actual");
+            }
+        }
+        
+        
         // Recargar userActual con los datos frescos
         userActual = loginManager.buscarUser(usuario);
-
+        contentPanel.remove(contentPanel.getComponentCount() - 1);
+        contentPanel.add(crearPerfilMainPanel(), "PERFIL_MAIN");
         JOptionPane.showMessageDialog(this, "Cambios guardados exitosamente");
 
     } catch(NumberFormatException ex){
@@ -438,7 +453,32 @@ edadField.setEditable(true);
     fotoCirculo.setFont(new Font("Arial", Font.BOLD, 36));
     fotoCirculo.setForeground(Color.WHITE);
     
-    fotoCirculo.setText(usuario.substring(0,1).toUpperCase());
+    
+    String profilePath = userActual != null ? userActual.getProfilePath() : "";
+
+        if(profilePath != null && !profilePath.isEmpty() 
+           && !profilePath.equals("USUARIO_DEFAULT.png") 
+           && !profilePath.equals("image.jpg")
+           && new File(profilePath).exists()) {            try {
+                ImageIcon icon = new ImageIcon(profilePath);
+                Image img = icon.getImage().getScaledInstance(320, 320, Image.SCALE_SMOOTH);
+                fotoCirculo.setIcon(new ImageIcon(img));
+                fotoCirculo.setPreferredSize(new Dimension(320,320));
+                fotoCirculo.setText("");
+            } catch(Exception ex) {
+                fotoCirculo.setText(usuario.substring(0,1).toUpperCase());
+            }
+        } else {
+            // foto default image.jpg del paquete GUI
+            try {
+                ImageIcon icon = new ImageIcon(getClass().getResource("USUARIO_DEFAULT.png"));
+                Image img = icon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+                fotoCirculo.setIcon(new ImageIcon(img));
+                fotoCirculo.setText("");
+            } catch(Exception ex) {
+                fotoCirculo.setText(usuario.substring(0,1).toUpperCase());
+            }
+        }
     gbc.gridx=0;gbc.gridy=0;
     gbc.gridheight=3;
     infoPanel.add(fotoCirculo,gbc);
@@ -487,7 +527,7 @@ edadField.setEditable(true);
     panel.add(sep, BorderLayout.CENTER);
     
     
-    JPanel gridPanel = new JPanel(new java.awt.GridLayout(0, 3, 3, 3));
+    JPanel gridPanel = new JPanel(new java.awt.GridLayout(0, 4, 3, 3));
     gridPanel.setBackground(new Color(18, 18, 18));
     gridPanel.setBorder(BorderFactory.createEmptyBorder(3, 0, 0, 0));
     
@@ -495,7 +535,7 @@ edadField.setEditable(true);
     for(int i = 0; i < 9; i++){
         JPanel celda = new JPanel();
         celda.setBackground(new Color(30, 30, 30));
-        celda.setPreferredSize(new Dimension(200, 200));
+        celda.setPreferredSize(new Dimension(300, 300));
         gridPanel.add(celda);
     }
     

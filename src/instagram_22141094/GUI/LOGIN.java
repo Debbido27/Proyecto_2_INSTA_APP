@@ -37,7 +37,7 @@ public class LOGIN  extends JFrame{
     private void INICIAR(){
     setTitle("INSTAGRAM");
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    setSize(1200,1200);
+    setSize(1366,768);
     setLocationRelativeTo(null);
     
     CardLayout cd = new CardLayout();
@@ -461,6 +461,8 @@ private JPanel REGISTRO(){
         if(creado) {
             if(!rutaFoto.isEmpty()) {
                 loginManager.setFotoPerfil(username, rutaFoto);
+            }else{
+            loginManager.setFotoPerfil(username, "USUARIO_DEFAULT.png");
             }
             
             JOptionPane.showMessageDialog(this, "Usuario creado exitosamente");
