@@ -134,6 +134,25 @@ public class PANEL_PERFIL_VISTA extends JPanel {
         infoPanel.add(nombreLabel, gbc);
 
         panel.add(infoPanel, BorderLayout.NORTH);
+        
+        JPanel sep = new JPanel();
+        sep.setBackground(new Color(38, 38, 38));
+        sep.setPreferredSize(new Dimension(0, 1));
+        panel.add(sep, BorderLayout.CENTER);
+
+        // GRID
+        JPanel gridPanel = new JPanel(new java.awt.GridLayout(0, 4, 3, 3));
+        gridPanel.setBackground(new Color(18, 18, 18));
+        gridPanel.setBorder(BorderFactory.createEmptyBorder(3, 0, 0, 0));
+        for (int i = 0; i < 9; i++) {
+            JPanel celda = new JPanel();
+            celda.setBackground(new Color(30, 30, 30));
+            celda.setPreferredSize(new Dimension(300, 300));
+            gridPanel.add(celda);
+        }
+        panel.add(gridPanel, BorderLayout.SOUTH);
+
+        return panel;
     }
     
 }
