@@ -433,116 +433,14 @@ edadField.setEditable(true);
     
     
     private JPanel crearPerfilMainPanel(){
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(new Color(18,18,18));
-        
-        JPanel infoPanel = new JPanel(new GridBagLayout());
-        infoPanel.setBackground(new Color(18,18,18));
-        infoPanel.setBorder(BorderFactory.createEmptyBorder(40,60,20,60));
-        
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets= new Insets(5,20,5,20);
-        gbc.anchor=GridBagConstraints.WEST;
-        
     if(userActual == null) userActual = loginManager.buscarUser(usuario);
-     
-    JLabel fotoCirculo = new JLabel();
-    fotoCirculo.setPreferredSize(new Dimension(100,100));
-    fotoCirculo.setBackground(new Color(60,60,60));
-    fotoCirculo.setOpaque(true);
-    fotoCirculo.setFont(new Font("Arial", Font.BOLD, 36));
-    fotoCirculo.setForeground(Color.WHITE);
+    PANEL_PERFIL_VISTA vista = new PANEL_PERFIL_VISTA(
+        userActual, usuario, loginManager, cardLayout, contentPanel
+    );
+    return vista;
+}
     
     
-    String profilePath = userActual != null ? userActual.getProfilePath() : "";
-
-        if(profilePath != null && !profilePath.isEmpty() 
-           && !profilePath.equals("USUARIO_DEFAULT.png") 
-           && !profilePath.equals("image.jpg")
-           && new File(profilePath).exists()) {            try {
-                ImageIcon icon = new ImageIcon(profilePath);
-                Image img = icon.getImage().getScaledInstance(320, 320, Image.SCALE_SMOOTH);
-                fotoCirculo.setIcon(new ImageIcon(img));
-                fotoCirculo.setPreferredSize(new Dimension(320,320));
-                fotoCirculo.setText("");
-            } catch(Exception ex) {
-                fotoCirculo.setText(usuario.substring(0,1).toUpperCase());
-            }
-        } else {
-            // foto default image.jpg del paquete GUI
-            try {
-                ImageIcon icon = new ImageIcon(getClass().getResource("USUARIO_DEFAULT.png"));
-                Image img = icon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
-                fotoCirculo.setIcon(new ImageIcon(img));
-                fotoCirculo.setText("");
-            } catch(Exception ex) {
-                fotoCirculo.setText(usuario.substring(0,1).toUpperCase());
-            }
-        }
-    gbc.gridx=0;gbc.gridy=0;
-    gbc.gridheight=3;
-    infoPanel.add(fotoCirculo,gbc);
-    
-    gbc.gridx=1; gbc.gridy=0;
-    gbc.gridheight=1;
-    JPanel usernamePanel = new JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT,10,10));
-    usernamePanel.setBackground(new Color(18,18,18));
-    
-     JLabel usernameLabel = new JLabel(usuario);
-    usernameLabel.setFont(new Font("Arial", Font.BOLD, 22));
-    usernameLabel.setForeground(Color.WHITE);
-    usernamePanel.add(usernameLabel);
-    
-    JButton editarBtn = new JButton("Editar perfil");
-    editarBtn.setBackground(new Color(54, 54, 54));
-    editarBtn.setForeground(Color.WHITE);
-    editarBtn.setFont(new Font("Arial", Font.BOLD, 13));
-    editarBtn.setBorderPainted(false);
-    editarBtn.setFocusPainted(false);
-    editarBtn.addActionListener(e -> cardLayout.show(contentPanel, "PERFIL"));
-    usernamePanel.add(editarBtn);
-    infoPanel.add(usernamePanel, gbc);
-    
-    gbc.gridx = 1; gbc.gridy = 1;
-    JPanel statsPanel = new JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 30, 0));
-    statsPanel.setBackground(new Color(18, 18, 18));
-    statsPanel.add(crearStat("0", "publicaciones"));
-    statsPanel.add(crearStat("0", "seguidores"));
-    statsPanel.add(crearStat("0", "siguiendo"));
-    infoPanel.add(statsPanel, gbc);
-    
-    gbc.gridx = 1; gbc.gridy = 2;
-    JLabel nombreLabel = new JLabel(userActual != null ? userActual.getFullname() : "");
-    nombreLabel.setFont(new Font("Arial", Font.BOLD, 14));
-    nombreLabel.setForeground(Color.WHITE);
-    infoPanel.add(nombreLabel, gbc);
-    
-    panel.add(infoPanel, BorderLayout.NORTH);
-     
-    
-    
-    JPanel sep = new JPanel();
-    sep.setBackground(new Color(38, 38, 38));
-    sep.setPreferredSize(new Dimension(0, 1));
-    panel.add(sep, BorderLayout.CENTER);
-    
-    
-    JPanel gridPanel = new JPanel(new java.awt.GridLayout(0, 4, 3, 3));
-    gridPanel.setBackground(new Color(18, 18, 18));
-    gridPanel.setBorder(BorderFactory.createEmptyBorder(3, 0, 0, 0));
-    
-    
-    for(int i = 0; i < 9; i++){
-        JPanel celda = new JPanel();
-        celda.setBackground(new Color(30, 30, 30));
-        celda.setPreferredSize(new Dimension(300, 300));
-        gridPanel.add(celda);
-    }
-    
-     panel.add(gridPanel, BorderLayout.SOUTH);
-    
-    return panel;
-    }
     
     
 private JLabel crearStat(String numero, String texto){
