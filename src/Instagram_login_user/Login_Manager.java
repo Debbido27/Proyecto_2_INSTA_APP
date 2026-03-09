@@ -117,7 +117,7 @@ public class Login_Manager {
        usersFile.writeLong(System.currentTimeMillis());
        usersFile.writeUTF(AccountStatus.ACTIVE.toString());
        usersFile.writeUTF(accountType.toString());
-       usersFile.writeUTF("");
+       usersFile.writeUTF("image.jpg");
 
        CrearFolder(username);
 
@@ -186,15 +186,56 @@ public class Login_Manager {
     
     
     public void setFotoPerfil(String username, String rutaFoto){
-        File profileFolder = new File(BASE_FOLDER+"/"+username+"/profile");
+    try {
+        File tempFile = new File(BASE_FOLDER + "/users_temp.ins");
+        RandomAccessFile temp = new RandomAccessFile(tempFile, "rw");
         
-        if(profileFolder.exists()){
-            User u = buscarUser(username);
-            if(u!= null){
-                u.setProfilePath(rutaFoto);
+        usersFile.seek(0);
+        
+        while(usersFile.getFilePointer() < usersFile.length()) {
+            String user = usersFile.readUTF();
+            String pass = usersFile.readUTF();
+            String fullname = usersFile.readUTF();
+            String gender = usersFile.readUTF();
+            int age = usersFile.readInt();
+            long date = usersFile.readLong();
+            String status = usersFile.readUTF();
+            String type = usersFile.readUTF();
+            String profile = usersFile.readUTF();
+            
+            if(user.equals(username)) {
+                profile = rutaFoto; 
             }
+            
+            temp.writeUTF(user);
+            temp.writeUTF(pass);
+            temp.writeUTF(fullname);
+            temp.writeUTF(gender);
+            temp.writeInt(age);
+            temp.writeLong(date);
+            temp.writeUTF(status);
+            temp.writeUTF(type);
+            temp.writeUTF(profile);
         }
+        
+        usersFile.close();
+        temp.close();
+        
+        File original = new File(BASE_FOLDER + "/users.ins");
+        original.delete();
+        tempFile.renameTo(original);
+        
+        usersFile = new RandomAccessFile(BASE_FOLDER + "/users.ins", "rw");
+        
+        User u = buscarUser(username);
+        if(u != null) {
+            u.setProfilePath(rutaFoto);
+        }
+        
+    } catch(IOException e) {
+        System.out.println("Error guardando foto de perfil: " + e.getMessage());
     }
+}
     
     public User[] buscarUsuariosCoincidentes(String texto){
     User[] encontrados = new User[50]; 
@@ -394,6 +435,11 @@ public class Login_Manager {
                 File oldFolder = new File(BASE_FOLDER+"/"+usernameA);
                 File newFolder = new File(BASE_FOLDER+"/"+newUsername);
                 oldFolder.renameTo(newFolder);
+                
+            if(!profile.isEmpty()) {
+                String newProfilePath = profile.replace(usernameA, newUsername);
+                profile = newProfilePath;
+            }
             }
 
             temp.writeUTF(user);

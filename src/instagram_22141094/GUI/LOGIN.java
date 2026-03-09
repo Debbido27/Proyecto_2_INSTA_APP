@@ -220,8 +220,12 @@ public class LOGIN  extends JFrame{
         if(loginManager.login(usuario, contrasena)) {
             // Login exitoso - mostrar panel en blanco
            
-               PANEL_USUARIO pn = new PANEL_USUARIO(usuario);
-                pn.setVisible(true);                
+               getContentPane().removeAll();
+                PANEL_USUARIO pn = new PANEL_USUARIO(usuario);
+                setContentPane(pn);
+                setSize(1200,800);
+                revalidate();
+                repaint();                
 
         } else {
             JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos");
