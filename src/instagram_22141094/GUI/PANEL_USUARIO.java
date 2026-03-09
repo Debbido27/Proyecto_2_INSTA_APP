@@ -505,5 +505,11 @@ edadField.setEditable(true);
     }
     
     
+private JLabel crearStat(String numero, String texto){
+    JLabel stat = new JLabel("<html><b>" + numero + "</b><br><center>" + texto + "</center></html>", JLabel.CENTER);
+    stat.setFont(new Font("Arial", Font.PLAIN, 14));
+    stat.setForeground(Color.WHITE);
+    return stat;
+}
     
 }
