@@ -1,5 +1,6 @@
 
 package instagram_22141094.GUI;
+import Instagram_login_user.Base_cuenta;
 import javax.swing.JOptionPane;
 import Instagram_login_user.Login_Manager;
 import Instagram_login_user.Base_cuenta.Gender;
@@ -18,6 +19,7 @@ import java.awt.Insets;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -305,30 +307,30 @@ private JPanel REGISTRO(){
         BorderFactory.createLineBorder(new Color(0,0,0)),
         BorderFactory.createEmptyBorder(5,10,5,10)
     ));
-    
+    //
     JLabel generoLabel = new JLabel("Género:");
     generoLabel.setFont(new Font("Arial",Font.PLAIN,14));
     generoLabel.setForeground(new Color(142,142,142));
     
-    JTextField generoField = new JTextField(15);
-    generoField.setBackground(new Color(109,123,133));
-    generoField.setPreferredSize(new Dimension(250,35));
-    generoField.setBorder(BorderFactory.createCompoundBorder(
-        BorderFactory.createLineBorder(new Color(0,0,0)),
-        BorderFactory.createEmptyBorder(5,10,5,10)
-    ));
-    
+    JComboBox<Base_cuenta.Gender> generoCombo = new JComboBox<>(Base_cuenta.Gender.values());
+    generoCombo.setBackground(new Color(109, 123, 133));
+    generoCombo.setForeground(Color.WHITE);
+    generoCombo.setFont(new Font("Arial", Font.PLAIN, 14));
+    generoCombo.setPreferredSize(new Dimension(250, 35));
+
+// Si ya hay un usuario cargado, seleccionamos su género actual
+        
     JLabel tipoLabel = new JLabel("Tipo de cuenta:");
     tipoLabel.setFont(new Font("Arial",Font.PLAIN,14));
     tipoLabel.setForeground(new Color(142,142,142));
     
-    JTextField tipoField = new JTextField(15);
-    tipoField.setBackground(new Color(109,123,133));
-    tipoField.setPreferredSize(new Dimension(250,35));
-    tipoField.setBorder(BorderFactory.createCompoundBorder(
-        BorderFactory.createLineBorder(new Color(0,0,0)),
-        BorderFactory.createEmptyBorder(5,10,5,10)
-    ));
+    JComboBox<Base_cuenta.AccountType> tipoCombo = new JComboBox<>(Base_cuenta.AccountType.values());
+    tipoCombo.setBackground(new Color(109, 123, 133));
+    tipoCombo.setForeground(Color.WHITE);
+    tipoCombo.setFont(new Font("Arial", Font.PLAIN, 14));
+    tipoCombo.setPreferredSize(new Dimension(250, 35));
+
+    // Si hay usuario, seleccionamos su tipo de cuenta
     
     JLabel rutaLabel = new JLabel("Ruta foto de perfil:");
     rutaLabel.setFont(new Font("Arial",Font.PLAIN,14));
@@ -381,11 +383,11 @@ private JPanel REGISTRO(){
     fgbc.gridy = row++;
     formulaRegistro.add(generoLabel, fgbc);
     fgbc.gridy = row++;
-    formulaRegistro.add(generoField, fgbc);
+    formulaRegistro.add(generoCombo, fgbc);
     fgbc.gridy = row++;
     formulaRegistro.add(tipoLabel, fgbc);
     fgbc.gridy = row++;
-    formulaRegistro.add(tipoField, fgbc);
+    formulaRegistro.add(tipoCombo, fgbc);
     fgbc.gridy = row++;
     formulaRegistro.add(rutaLabel, fgbc);
     fgbc.gridy = row++;
@@ -412,9 +414,9 @@ private JPanel REGISTRO(){
     String password = passField.getText().trim();
     String fullname = nombreField.getText().trim();
     String edadTexto = edadField.getText().trim();
-    String generoTexto = generoField.getText().trim();
-    String tipoTexto = tipoField.getText().trim();
     String rutaFoto = rutaField.getText().trim();
+    Gender genero = (Gender) generoCombo.getSelectedItem();
+    AccountType tipo = (AccountType) tipoCombo.getSelectedItem();
     
     // Validar que ningún campo obligatorio esté vacío
     if(username.isEmpty()) {
@@ -441,17 +443,7 @@ private JPanel REGISTRO(){
         return;
     }
     
-    if(generoTexto.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "El campo Género está vacío");
-        generoField.requestFocus();
-        return;
-    }
-    
-    if(tipoTexto.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "El campo Tipo de cuenta está vacío");
-        tipoField.requestFocus();
-        return;
-    }
+ 
     
     try {
         int edad = Integer.parseInt(edadTexto);
@@ -461,25 +453,9 @@ private JPanel REGISTRO(){
             return;
         }
         
-        Gender genero;
-        AccountType tipo;
+   
         
-        try {
-            genero = Gender.valueOf(generoTexto.toUpperCase());
-        } catch(IllegalArgumentException ex) {
-            JOptionPane.showMessageDialog(this, "Género inválido. Use: MASCULINO, FEMENINO, u OTRO");
-            generoField.requestFocus();
-            return;
-        }
-        
-        try {
-            tipo = AccountType.valueOf(tipoTexto.toUpperCase());
-        } catch(IllegalArgumentException ex) {
-            JOptionPane.showMessageDialog(this, "Tipo de cuenta inválido. Use: PUBLIC o PRIVATE");
-            tipoField.requestFocus();
-            return;
-        }
-        
+
         boolean creado = loginManager.crearUser(username, password, fullname, genero, edad, tipo);
         
         if(creado) {
@@ -497,8 +473,7 @@ private JPanel REGISTRO(){
             passField.setText("");
             nombreField.setText("");
             edadField.setText("");
-            generoField.setText("");
-            tipoField.setText("");
+            
             rutaField.setText("");
         } else {
             JOptionPane.showMessageDialog(this, "El usuario ya existe");

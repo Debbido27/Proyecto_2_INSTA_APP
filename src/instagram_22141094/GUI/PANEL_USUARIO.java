@@ -13,6 +13,9 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -29,9 +32,11 @@ public class PANEL_USUARIO extends JPanel{
    private String usuario;
    private CardLayout cardLayout;
     private JPanel contentPanel;
+    private User userActual;
     Login_Manager loginManager = new Login_Manager();
     public PANEL_USUARIO(String usuario){
       this.usuario=usuario;
+      
         setLayout(new BorderLayout());
       setPreferredSize(new Dimension(1200,800));
       initFrame();
@@ -185,8 +190,10 @@ public class PANEL_USUARIO extends JPanel{
     panel.add(titulo, gbc);
     
     // Obtener datos actuales del usuario
-    User userActual = loginManager.buscarUser(usuario);
-    
+// Usar la variable de instancia en lugar de crear una nueva
+if(userActual == null) {
+    userActual = loginManager.buscarUser(usuario);
+}    
     // Campo Username (no editable directamente)
     gbc.insets = new Insets(5, 50, 5, 50);
     JLabel usernameLabel = new JLabel("Nombre de usuario:");
@@ -215,12 +222,16 @@ public class PANEL_USUARIO extends JPanel{
     cambiarUsernameBtn.addActionListener(e -> {
         String nuevoUsername = JOptionPane.showInputDialog(this, "Nuevo nombre de usuario:");
         if(nuevoUsername != null && !nuevoUsername.trim().isEmpty()) {
-            if(loginManager.cambiarUsername(usuario, nuevoUsername)) {
-                JOptionPane.showMessageDialog(this, "Username cambiado exitosamente");
-                usuario = nuevoUsername; // Actualizar variable local
-                usernameField.setText(nuevoUsername);
-            } else {
-                JOptionPane.showMessageDialog(this, "Error: El username ya existe");
+            try {
+                if(loginManager.cambiarUsername(usuario, nuevoUsername)) {
+                    JOptionPane.showMessageDialog(this, "Username cambiado exitosamente");
+                    usuario = nuevoUsername; // Actualizar variable local
+                    usernameField.setText(nuevoUsername);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Error: El username ya existe");
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(PANEL_USUARIO.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     });
@@ -332,16 +343,24 @@ public class PANEL_USUARIO extends JPanel{
     cambiarPassBtn.setForeground(Color.WHITE);
     cambiarPassBtn.setFont(new Font("Arial", Font.BOLD, 14));
     cambiarPassBtn.setBorderPainted(false);
+    
+    
     cambiarPassBtn.addActionListener(e -> {
-        String newPass = JOptionPane.showInputDialog(this, "Nueva contraseña:");
-        if(newPass != null && !newPass.trim().isEmpty()) {
-            if(loginManager.cambiarPassword(usuario, newPass)) {
-                JOptionPane.showMessageDialog(this, "Contraseña cambiada exitosamente");
-            } else {
-                JOptionPane.showMessageDialog(this, "Error al cambiar contraseña");
-            }
+    String newPass = JOptionPane.showInputDialog(this, "Nueva contraseña:");
+    if(newPass != null && !newPass.trim().isEmpty()) {
+        if(loginManager.cambiarPassword(usuario, newPass)) {
+            
+            
+            // Actualizar la referencia del usuario
+            userActual = loginManager.buscarUser(usuario);
+            
+            // Opcional: Mostrar confirmación adicional
+            System.out.println("Contraseña actualizada para: " + usuario);
+        } else {
+            JOptionPane.showMessageDialog(this, "Error al cambiar contraseña");
         }
-    });
+    }
+});
     panel.add(cambiarPassBtn, gbc);
     
     // Botón Guardar cambios

@@ -29,7 +29,8 @@ public class Login_Manager {
        }
     }
     
-    public boolean UserExiste(String username){
+    public boolean UserExiste(String username) throws IOException{
+        usersFile.seek(0);
         try {
             while(usersFile.getFilePointer()<usersFile.length()){
                 String user = usersFile.readUTF();
@@ -352,16 +353,17 @@ public class Login_Manager {
     }
     
     
-    //CAMBIO DE DATOS
-  public boolean cambiarPassword(String username, String newPassword){
+    public boolean cambiarPassword(String username, String newPassword) throws IOException{
     boolean modificado = false;
-    try{
+     usersFile.close();
+        usersFile = new RandomAccessFile(BASE_FOLDER + "/users.ins", "rw");
+    try {
         File tempFile = new File(BASE_FOLDER + "/users_temp.ins");
-        RandomAccessFile temp = new RandomAccessFile(tempFile,"rw");
+        RandomAccessFile temp = new RandomAccessFile(tempFile, "rw");
 
         usersFile.seek(0);
 
-        while(usersFile.getFilePointer() < usersFile.length()){
+        while(usersFile.getFilePointer() < usersFile.length()) {
             String user = usersFile.readUTF();
             String pass = usersFile.readUTF();
             String fullname = usersFile.readUTF();
@@ -372,11 +374,12 @@ public class Login_Manager {
             String type = usersFile.readUTF();
             String profile = usersFile.readUTF();
 
-            if(user.equals(username)){
-                pass = newPassword;
+            if(user.equals(username)) {
+                pass = newPassword; // cambio persistente
                 modificado = true;
             }
 
+            // Escribimos TODO en el archivo temporal
             temp.writeUTF(user);
             temp.writeUTF(pass);
             temp.writeUTF(fullname);
@@ -388,25 +391,31 @@ public class Login_Manager {
             temp.writeUTF(profile);
         }
 
+        // Cerramos archivos
         usersFile.close();
         temp.close();
 
+        // Reemplazamos archivo original
         File original = new File(BASE_FOLDER + "/users.ins");
         original.delete();
         tempFile.renameTo(original);
 
-        usersFile = new RandomAccessFile(BASE_FOLDER+"/users.ins","rw");
+        // Reabrimos usersFile
+        usersFile = new RandomAccessFile(BASE_FOLDER + "/users.ins", "rw");
 
-    }catch(IOException e){
-        System.out.println("Error cambiando password");
+        // Actualizamos currentUser desde el archivo
+        if(currentUser != null && currentUser.getUsername().equals(username)){
+            currentUser = buscarUser(username); // 💡 esta línea garantiza que la contraseña sea la nueva
+        }
+
+    } catch(IOException e) {
+        System.out.println("Error cambiando password: " + e.getMessage());
     }
 
     return modificado;
 }
   
-  
-  
-    public boolean cambiarUsername(String usernameA, String newUsername){
+    public boolean cambiarUsername(String usernameA, String newUsername) throws IOException{
     if(UserExiste(newUsername)){
         return false;
     }
@@ -469,8 +478,10 @@ public class Login_Manager {
     return modificado;
 }
     
-    public boolean cambiarEdad(String username, int newAge){
+    public boolean cambiarEdad(String username, int newAge) throws IOException{
     boolean modificado = false;
+    usersFile.close();
+    usersFile = new RandomAccessFile(BASE_FOLDER + "/users.ins", "rw");
     try{
         File tempFile = new File(BASE_FOLDER + "/users_temp.ins");
         RandomAccessFile temp = new RandomAccessFile(tempFile, "rw");
@@ -520,8 +531,10 @@ public class Login_Manager {
 }
     
     
-    public boolean cambiarTipoCuenta(String username, AccountType tipo){
+    public boolean cambiarTipoCuenta(String username, AccountType tipo) throws IOException{
     boolean modificado = false;
+    usersFile.close();
+    usersFile = new RandomAccessFile(BASE_FOLDER + "/users.ins", "rw");
     try{
         File tempFile = new File(BASE_FOLDER + "/users_temp.ins");
         RandomAccessFile temp = new RandomAccessFile(tempFile, "rw");
@@ -570,7 +583,9 @@ public class Login_Manager {
     return modificado;
 }
     
-    public boolean desactivarCuenta(String username){
+    public boolean desactivarCuenta(String username) throws IOException{
+        usersFile.close();
+    usersFile = new RandomAccessFile(BASE_FOLDER + "/users.ins", "rw");
     boolean modificado = false;
     try{
         File tempFile = new File(BASE_FOLDER + "/users_temp.ins");
@@ -620,7 +635,9 @@ public class Login_Manager {
     return modificado;
 }
     
-   public boolean activarCuenta(String username){
+   public boolean activarCuenta(String username) throws IOException{
+       usersFile.close();
+usersFile = new RandomAccessFile(BASE_FOLDER + "/users.ins", "rw");
     boolean modificado = false;
     try{
         File tempFile = new File(BASE_FOLDER + "/users_temp.ins");
