@@ -223,8 +223,8 @@ public class LOGIN  extends JFrame{
             // Login exitoso - mostrar panel en blanco
            
                getContentPane().removeAll();
-                PANEL_USUARIO pn = new PANEL_USUARIO(usuario);
-                setContentPane(pn);
+    PANEL_USUARIO pn = new PANEL_USUARIO(usuario, loginManager);           
+    setContentPane(pn);
                 setSize(1200,800);
                 revalidate();
                 repaint();                

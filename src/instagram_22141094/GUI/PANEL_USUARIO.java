@@ -33,10 +33,11 @@ public class PANEL_USUARIO extends JPanel{
    private CardLayout cardLayout;
     private JPanel contentPanel;
     private User userActual;
-    Login_Manager loginManager = new Login_Manager();
-    public PANEL_USUARIO(String usuario){
+    Login_Manager loginManager;
+    public PANEL_USUARIO(String usuario,Login_Manager loginManager){
       this.usuario=usuario;
-      
+      this.usuario=usuario;
+      this.loginManager=loginManager;
         setLayout(new BorderLayout());
       setPreferredSize(new Dimension(1200,800));
       initFrame();
@@ -252,7 +253,7 @@ if(userActual == null) {
         BorderFactory.createEmptyBorder(8, 10, 8, 10)
     ));
     panel.add(nombreField, gbc);
-    
+    nombreField.setEditable(true);
     // Campo Edad
     JLabel edadLabel = new JLabel("Edad:");
     edadLabel.setFont(new Font("Arial", Font.BOLD, 14));
@@ -267,6 +268,7 @@ if(userActual == null) {
         BorderFactory.createLineBorder(new Color(80, 80, 80)),
         BorderFactory.createEmptyBorder(8, 10, 8, 10)
     ));
+edadField.setEditable(true);
     panel.add(edadField, gbc);
     
     // Campo Género
@@ -348,16 +350,20 @@ if(userActual == null) {
     cambiarPassBtn.addActionListener(e -> {
     String newPass = JOptionPane.showInputDialog(this, "Nueva contraseña:");
     if(newPass != null && !newPass.trim().isEmpty()) {
-        if(loginManager.cambiarPassword(usuario, newPass)) {
-            
-            
-            // Actualizar la referencia del usuario
-            userActual = loginManager.buscarUser(usuario);
-            
-            // Opcional: Mostrar confirmación adicional
-            System.out.println("Contraseña actualizada para: " + usuario);
-        } else {
-            JOptionPane.showMessageDialog(this, "Error al cambiar contraseña");
+        try {
+            if(loginManager.cambiarPassword(usuario, newPass)) {
+                
+                
+                // Actualizar la referencia del usuario
+                userActual = loginManager.buscarUser(usuario);
+                
+                // Opcional: Mostrar confirmación adicional
+                System.out.println("Contraseña actualizada para: " + usuario);
+            } else {
+                JOptionPane.showMessageDialog(this, "Error al cambiar contraseña");
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(PANEL_USUARIO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 });
@@ -371,48 +377,55 @@ if(userActual == null) {
     guardarBtn.setBorderPainted(false);
     guardarBtn.setFocusPainted(false);
     guardarBtn.setPreferredSize(new Dimension(250, 45));
-    guardarBtn.addActionListener(e -> {
-        // Aquí implementar la lógica para guardar todos los cambios
-        try {
-            String nuevoNombre = nombreField.getText().trim();
-            int nuevaEdad = Integer.parseInt(edadField.getText().trim());
-            Gender nuevoGenero = (Gender) generoCombo.getSelectedItem();
-            AccountType nuevoTipo = (AccountType) tipoCombo.getSelectedItem();
-            String nuevaRutaFoto = rutaFotoLabel.getText();
-            
-            if(!nuevaRutaFoto.equals("Sin foto") && !nuevaRutaFoto.equals(userActual.getProfilePath())) {
-                loginManager.setFotoPerfil(usuario, nuevaRutaFoto);
-            }
-            
-            if(!nuevoNombre.equals(userActual.getFullname())) {
-                // Necesitarías un método para cambiar nombre completo
-                JOptionPane.showMessageDialog(this, "Nombre cambiado (pendiente implementar)");
-            }
-            
-            if(nuevaEdad != userActual.getAge()) {
-                loginManager.cambiarEdad(usuario, nuevaEdad);
-            }
-            
-            if(nuevoGenero != userActual.getGender()) {
-                // Necesitarías método para cambiar género
-            }
-            
-            if(nuevoTipo != userActual.getAccountType()) {
-                loginManager.cambiarTipoCuenta(usuario, nuevoTipo);
-            }
-            
-            JOptionPane.showMessageDialog(this, "Cambios guardados exitosamente");
-            
-        } catch(NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Edad debe ser un número válido");
-        }
-    });
+    
+    
+   guardarBtn.addActionListener(e -> {
+    try {
+        String nuevoNombre = nombreField.getText().trim();
+        int nuevaEdad = Integer.parseInt(edadField.getText().trim());
+        Gender nuevoGenero = (Gender) generoCombo.getSelectedItem();
+        AccountType nuevoTipo = (AccountType) tipoCombo.getSelectedItem();
+
+        if(!nuevoNombre.equals(userActual.getFullname()))
+            loginManager.cambiarNombre(usuario, nuevoNombre);
+
+        if(nuevaEdad != userActual.getAge())
+            loginManager.cambiarEdad(usuario, nuevaEdad);
+
+        if(nuevoGenero != userActual.getGender())
+            loginManager.cambiarGenero(usuario, nuevoGenero);
+
+        if(nuevoTipo != userActual.getAccountType())
+            loginManager.cambiarTipoCuenta(usuario, nuevoTipo);
+
+        // Recargar userActual con los datos frescos
+        userActual = loginManager.buscarUser(usuario);
+
+        JOptionPane.showMessageDialog(this, "Cambios guardados exitosamente");
+
+    } catch(NumberFormatException ex){
+        JOptionPane.showMessageDialog(this, "Edad debe ser un número válido");
+    } catch(IOException ex){
+        Logger.getLogger(PANEL_USUARIO.class.getName()).log(Level.SEVERE, null, ex);
+    }
+});
     
     gbc.insets = new Insets(30, 50, 20, 50);
     panel.add(guardarBtn, gbc);
     
     return panel;
 }
+    
+    
+    private JPanel crearPerfilMainPanel(){
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(new Color(18,18,18));
+        
+        JPanel infoPanel = new JPanel(new GridBagLayout());
+        infoPanel.setBackground(new Color(18,18,18));
+        infoPanel.setBorder(BorderFactory.createEmptyBorder(40,60,20,60));
+        
+    }
     
     
     

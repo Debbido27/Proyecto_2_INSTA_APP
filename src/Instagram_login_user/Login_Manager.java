@@ -15,19 +15,46 @@ public class Login_Manager {
     private static final String BASE_FOLDER = "INSTA_RAIZ";
     File base = new File(BASE_FOLDER);
     public Login_Manager(){
-        if(!base.exists()){
-       base.mkdir();
-        }
-        
-       try{
-       usersFile = new RandomAccessFile(BASE_FOLDER+"/users.ins","rw");
-       
-       currentUser=null;
-       limpiarUsuariosHuerfanos();
-       }catch(IOException e){
-           System.out.println("Error creando archivo de usuarios");
-       }
+    if(!base.exists()) base.mkdir();
+
+    try {
+        usersFile = new RandomAccessFile(BASE_FOLDER+"/users.ins","rw");
+        limpiarUsuariosHuerfanos(); // mantiene los usuarios válidos
+
+        // 💡 Cargar último usuario activo (opcional)
+        currentUser = cargarUltimoUsuarioActivo(); 
+
+    } catch(IOException e){
+        System.out.println("Error creando archivo de usuarios");
     }
+}
+    
+    private User cargarUltimoUsuarioActivo() {
+    User lastActive = null;
+    try {
+        usersFile.seek(0);
+        while(usersFile.getFilePointer() < usersFile.length()){
+            String user = usersFile.readUTF();
+            String pass = usersFile.readUTF();
+            String fullname = usersFile.readUTF();
+            String gender = usersFile.readUTF();
+            int age = usersFile.readInt();
+            long date = usersFile.readLong();
+            String status = usersFile.readUTF();
+            String type = usersFile.readUTF();
+            String profile = usersFile.readUTF();
+
+            if(AccountStatus.valueOf(status) == AccountStatus.ACTIVE){
+                lastActive = new User(user, pass, fullname, Gender.valueOf(gender), age, AccountType.valueOf(type));
+                lastActive.setStatus(AccountStatus.valueOf(status));
+                lastActive.setProfilePath(profile);
+            }
+        }
+    } catch(IOException e){
+        System.out.println("Error cargando usuario activo");
+    }
+    return lastActive; // puede ser null si no hay usuarios activos
+}
     
     public boolean UserExiste(String username) throws IOException{
         usersFile.seek(0);
@@ -403,15 +430,86 @@ public class Login_Manager {
         // Reabrimos usersFile
         usersFile = new RandomAccessFile(BASE_FOLDER + "/users.ins", "rw");
 
-        // Actualizamos currentUser desde el archivo
-        if(currentUser != null && currentUser.getUsername().equals(username)){
-            currentUser = buscarUser(username); // 💡 esta línea garantiza que la contraseña sea la nueva
-        }
-
+        if(currentUser != null && currentUser.getUsername().equals(username)) {
+    usersFile.seek(0); // ← asegura que empieza desde el inicio
+    currentUser = buscarUser(username);
+    // también actualiza la referencia directamente por si acaso:
+    currentUser.setPassword(newPassword); 
+}
     } catch(IOException e) {
         System.out.println("Error cambiando password: " + e.getMessage());
     }
 
+    return modificado;
+}
+    
+    public boolean cambiarNombre(String username, String newFullname) throws IOException{
+    boolean modificado = false;
+    usersFile.close();
+    usersFile = new RandomAccessFile(BASE_FOLDER + "/users.ins", "rw");
+    try{
+        File tempFile = new File(BASE_FOLDER + "/users_temp.ins");
+        RandomAccessFile temp = new RandomAccessFile(tempFile, "rw");
+        usersFile.seek(0);
+        while(usersFile.getFilePointer() < usersFile.length()){
+            String user = usersFile.readUTF();
+            String pass = usersFile.readUTF();
+            String fullname = usersFile.readUTF();
+            String gender = usersFile.readUTF();
+            int age = usersFile.readInt();
+            long date = usersFile.readLong();
+            String status = usersFile.readUTF();
+            String type = usersFile.readUTF();
+            String profile = usersFile.readUTF();
+
+            if(user.equals(username)){
+                fullname = newFullname;
+                modificado = true;
+            }
+            temp.writeUTF(user); temp.writeUTF(pass); temp.writeUTF(fullname);
+            temp.writeUTF(gender); temp.writeInt(age); temp.writeLong(date);
+            temp.writeUTF(status); temp.writeUTF(type); temp.writeUTF(profile);
+        }
+        usersFile.close(); temp.close();
+        new File(BASE_FOLDER + "/users.ins").delete();
+        tempFile.renameTo(new File(BASE_FOLDER + "/users.ins"));
+        usersFile = new RandomAccessFile(BASE_FOLDER + "/users.ins", "rw");
+    } catch(IOException e){ System.out.println("Error cambiando nombre: " + e.getMessage()); }
+    return modificado;
+}
+
+public boolean cambiarGenero(String username, Gender newGender) throws IOException{
+    boolean modificado = false;
+    usersFile.close();
+    usersFile = new RandomAccessFile(BASE_FOLDER + "/users.ins", "rw");
+    try{
+        File tempFile = new File(BASE_FOLDER + "/users_temp.ins");
+        RandomAccessFile temp = new RandomAccessFile(tempFile, "rw");
+        usersFile.seek(0);
+        while(usersFile.getFilePointer() < usersFile.length()){
+            String user = usersFile.readUTF();
+            String pass = usersFile.readUTF();
+            String fullname = usersFile.readUTF();
+            String gender = usersFile.readUTF();
+            int age = usersFile.readInt();
+            long date = usersFile.readLong();
+            String status = usersFile.readUTF();
+            String type = usersFile.readUTF();
+            String profile = usersFile.readUTF();
+
+            if(user.equals(username)){
+                gender = newGender.toString();
+                modificado = true;
+            }
+            temp.writeUTF(user); temp.writeUTF(pass); temp.writeUTF(fullname);
+            temp.writeUTF(gender); temp.writeInt(age); temp.writeLong(date);
+            temp.writeUTF(status); temp.writeUTF(type); temp.writeUTF(profile);
+        }
+        usersFile.close(); temp.close();
+        new File(BASE_FOLDER + "/users.ins").delete();
+        tempFile.renameTo(new File(BASE_FOLDER + "/users.ins"));
+        usersFile = new RandomAccessFile(BASE_FOLDER + "/users.ins", "rw");
+    } catch(IOException e){ System.out.println("Error cambiando genero: " + e.getMessage()); }
     return modificado;
 }
   
@@ -474,6 +572,7 @@ public class Login_Manager {
     }catch(IOException e){
         System.out.println("Error cambiando username");
     }
+    
 
     return modificado;
 }
