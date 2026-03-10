@@ -7,6 +7,7 @@ import Instagram_login_user.User;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -136,6 +137,47 @@ public class PANEL_SEGUIDORES extends JPanel {
                 fotoLabel.setText(u.getUsername().substring(0, 1).toUpperCase());
             }
         }
+        
+        card.add(fotoLabel, BorderLayout.WEST);
+
+        // Info
+        JPanel infoPanel = new JPanel(new GridBagLayout());
+        infoPanel.setBackground(new Color(30, 30, 30));
+        infoPanel.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 0));
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.anchor = GridBagConstraints.WEST;
+
+        JLabel usernameLabel = new JLabel(u.getUsername());
+        usernameLabel.setFont(new Font("Arial", Font.BOLD, 15));
+        usernameLabel.setForeground(Color.WHITE);
+        infoPanel.add(usernameLabel, gbc);
+
+        JLabel nombreLabel = new JLabel(u.getFullname());
+        nombreLabel.setFont(new Font("Arial", Font.PLAIN, 13));
+        nombreLabel.setForeground(new Color(160, 160, 160));
+        infoPanel.add(nombreLabel, gbc);
+
+        card.add(infoPanel, BorderLayout.CENTER);
+
+        // Click para ver perfil
+        card.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        card.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                abrirPerfil(u);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                card.setBackground(new Color(45, 45, 45));
+                infoPanel.setBackground(new Color(45, 45, 45));
+            }
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                card.setBackground(new Color(30, 30, 30));
+                infoPanel.setBackground(new Color(30, 30, 30));
+            }
+        });
+
+        return card;
         
         
     }
