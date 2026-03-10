@@ -27,4 +27,10 @@ public class PANEL_SIGUIENDO extends JPanel {
         setBackground(new Color(18, 18, 18));
         construir();
     }
+    
+    public void construir(){
+        
+    }
+    
+    
 }
