@@ -38,4 +38,23 @@ public class Followers_Manager {
         return contieneLinea(getSolicitudesPath(seguido), follower);
     }
     
+    
+    public boolean aceptarSolicitud(String follower, String seguido) {
+        if (!tieneSolicitudPendiente(follower, seguido)) return false;
+        eliminarLinea(getSolicitudesPath(seguido), follower);
+        agregarLinea(getFollowingPath(follower), seguido);
+        agregarLinea(getFollowersPath(seguido), follower);
+        return true;
+    }
+
+    public boolean rechazarSolicitud(String follower, String seguido) {
+        return eliminarLinea(getSolicitudesPath(seguido), follower);
+    }
+
+    public String[] getFollowers(String username) {
+        return leerLineas(getFollowersPath(username));
+    }
+    
+    
+    
 }
