@@ -93,5 +93,9 @@ public class PANEL_SEGUIDORES extends JPanel {
     }
     
     
+    private JPanel crearCard(User u){
+        
+    }
+    
     
 }
