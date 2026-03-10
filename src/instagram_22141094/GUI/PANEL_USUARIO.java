@@ -3,6 +3,7 @@ package instagram_22141094.GUI;
 
 import Instagram_login_user.Base_cuenta.AccountType;
 import Instagram_login_user.Base_cuenta.Gender;
+import Instagram_login_user.Followers_Manager;
 import Instagram_login_user.Login_Manager;
 import Instagram_login_user.User;
 import java.awt.BorderLayout;
@@ -36,11 +37,13 @@ public class PANEL_USUARIO extends JPanel{
    private CardLayout cardLayout;
     private JPanel contentPanel;
     private User userActual;
+    Followers_Manager followersManager = new Followers_Manager();
     Login_Manager loginManager;
-    public PANEL_USUARIO(String usuario,Login_Manager loginManager){
+    public PANEL_USUARIO(String usuario,Login_Manager loginManager,Followers_Manager followersManager){
       this.usuario=usuario;
       this.usuario=usuario;
       this.loginManager=loginManager;
+      this.followersManager = followersManager;
         setLayout(new BorderLayout());
       setPreferredSize(new Dimension(1200,800));
       initFrame();
@@ -98,6 +101,7 @@ public class PANEL_USUARIO extends JPanel{
         JButton perfilBtn = crearBotonMenu("Perfil");
         JButton subirBtn = crearBotonMenu("Subir");
 
+       
         feedBtn.addActionListener(e -> cardLayout.show(contentPanel, "FEED"));
         buscarBtn.addActionListener(e -> cardLayout.show(contentPanel, "BUSCAR"));
         inboxBtn.addActionListener(e -> cardLayout.show(contentPanel, "INBOX"));
@@ -109,13 +113,26 @@ public class PANEL_USUARIO extends JPanel{
         });      
         subirBtn.addActionListener(e -> cardLayout.show(contentPanel, "SUBIR"));
 
+        JButton cerrarSesionBtn = crearBotonMenu("Cerrar Sesion");
+        cerrarSesionBtn.setForeground(new Color(255,0,0));
+        
+        cerrarSesionBtn.addActionListener(e -> {
+            JFrame frame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+            frame.dispose();
+            new LOGIN().setVisible(true);
+        });
+        
+        JButton solicitudesBtn = crearBotonMenu("Solicitudes");
+        solicitudesBtn.addActionListener(e -> cardLayout.show(contentPanel, "SOLICITUDES"));
         gbc.insets = new Insets(20, 15, 20, 15);
         menu.add(feedBtn, gbc);
         menu.add(buscarBtn, gbc);
         menu.add(inboxBtn, gbc);
         menu.add(perfilBtn, gbc);
         menu.add(subirBtn, gbc);
-    
+        menu.add(solicitudesBtn, gbc);
+        menu.add(cerrarSesionBtn,gbc);
+      
     return menu;
         
     }
