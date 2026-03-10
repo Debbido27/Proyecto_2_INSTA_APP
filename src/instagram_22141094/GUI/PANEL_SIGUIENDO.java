@@ -16,6 +16,7 @@ import java.awt.Insets;
 import java.io.File;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -133,6 +134,38 @@ public class PANEL_SIGUIENDO extends JPanel {
             }
         }
         card.add(fotoLabel, BorderLayout.WEST);
+        JPanel infoPanel = new JPanel(new GridBagLayout());
+        infoPanel.setBackground(new Color(30, 30, 30));
+        infoPanel.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 0));
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.anchor = GridBagConstraints.WEST;
+
+        JLabel usernameLabel = new JLabel(u.getUsername());
+        usernameLabel.setFont(new Font("Arial", Font.BOLD, 15));
+        usernameLabel.setForeground(Color.WHITE);
+        infoPanel.add(usernameLabel, gbc);
+
+        JLabel nombreLabel = new JLabel(u.getFullname());
+        nombreLabel.setFont(new Font("Arial", Font.PLAIN, 13));
+        nombreLabel.setForeground(new Color(160, 160, 160));
+        infoPanel.add(nombreLabel, gbc);
+
+        card.add(infoPanel, BorderLayout.CENTER);
+
+        // Botón dejar de seguir
+        JButton dejarBtn = new JButton("Dejar de seguir");
+        dejarBtn.setBackground(new Color(54, 54, 54));
+        dejarBtn.setForeground(Color.WHITE);
+        dejarBtn.setFont(new Font("Arial", Font.BOLD, 12));
+        dejarBtn.setBorderPainted(false);
+        dejarBtn.setFocusPainted(false);
+        dejarBtn.addActionListener(e -> {
+            followersManager.dejarDeSeguir(usuarioLogueado, u.getUsername());
+            construir();
+        });
+        card.add(dejarBtn, BorderLayout.EAST);
     }
     
 }
