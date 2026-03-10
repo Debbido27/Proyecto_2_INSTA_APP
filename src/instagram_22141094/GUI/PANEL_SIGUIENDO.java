@@ -185,4 +185,8 @@ public class PANEL_SIGUIENDO extends JPanel {
         return card;
     }
     
+    
+    private void abrirPerfil(User u){
+        
+    }
 }
