@@ -447,7 +447,7 @@ edadField.setEditable(true);
     private JPanel crearPerfilMainPanel(){
     if(userActual == null) userActual = loginManager.buscarUser(usuario);
     PANEL_PERFIL_VISTA vista = new PANEL_PERFIL_VISTA(
-        userActual, usuario, loginManager, cardLayout, contentPanel
+        userActual, usuario, loginManager, followersManager, cardLayout, contentPanel
     );
     return vista;
 }

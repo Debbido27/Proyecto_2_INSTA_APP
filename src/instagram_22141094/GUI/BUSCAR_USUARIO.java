@@ -1,6 +1,7 @@
 
 package instagram_22141094.GUI;
 
+import Instagram_login_user.Followers_Manager;
 import Instagram_login_user.Login_Manager;
 import Instagram_login_user.User;
 import java.awt.BorderLayout;
@@ -27,13 +28,15 @@ public class BUSCAR_USUARIO extends JPanel {
     private CardLayout cardLayout;
     private JPanel contentPanel;
     private JPanel resultadosPanel;
-    
-    public BUSCAR_USUARIO(String usuarioLogueado, Login_Manager loginManager, CardLayout cardLayout, JPanel contentPanel){
+    Followers_Manager followersManager;
+    public BUSCAR_USUARIO(String usuarioLogueado, Login_Manager loginManager, CardLayout cardLayout, JPanel contentPanel,
+            Followers_Manager followersManager){
         
         this.usuarioLogueado = usuarioLogueado;
         this.loginManager = loginManager;
         this.cardLayout = cardLayout;
         this.contentPanel = contentPanel;
+        this.followersManager=followersManager;
         setLayout(new BorderLayout());
         setBackground(new Color(18,18,18));
         construir();
