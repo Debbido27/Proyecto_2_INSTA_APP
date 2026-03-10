@@ -178,7 +178,10 @@ public class PANEL_SEGUIDORES extends JPanel {
         });
 
         return card;
-        
+
+    }
+    
+    private void abrirPerfil(User u ){
         
     }
     
