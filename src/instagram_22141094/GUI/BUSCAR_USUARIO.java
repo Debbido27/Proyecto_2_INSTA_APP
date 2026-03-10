@@ -1,13 +1,31 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package instagram_22141094.GUI;
 
-/**
- *
- * @author Dell
- */
-public class BUSCAR_USUARIO {
+import Instagram_login_user.Login_Manager;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Color;
+import javax.swing.JPanel;
+
+
+public class BUSCAR_USUARIO extends JPanel {
+    private Login_Manager loginManager;
+    private String usuarioLogueado;
+    private CardLayout cardLayout;
+    private JPanel contentPanel;
+    private JPanel resultadosPanel;
+    
+    public BUSCAR_USUARIO(String usuarioLogueado, Login_Manager loginManager, CardLayout cardLayout, JPanel contentPanel){
+        
+        this.usuarioLogueado = usuarioLogueado;
+        this.loginManager = loginManager;
+        this.cardLayout = cardLayout;
+        this.contentPanel = contentPanel;
+        setLayout(new BorderLayout());
+        setBackground(new Color(18,18,18));
+        construir();
+    }
+    
+    
     
 }
