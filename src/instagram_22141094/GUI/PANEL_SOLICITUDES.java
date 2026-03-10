@@ -34,6 +34,9 @@ public class PANEL_SOLICITUDES extends JPanel{
     }
     
     
+    public void construir(){
+        
+    }
     
     
     
