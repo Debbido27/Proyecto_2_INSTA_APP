@@ -33,7 +33,7 @@ public class PANEL_PERFIL_VISTA extends JPanel {
         this.userVisto=userVisto;
         this.usuarioLogueado=usuarioLogueado;
         this.loginManager=loginManager;
-        this.cardLayout=cardLayout;
+        this.cardLayout=cardlayout;
         this.contentPanel=contentPanel;
         setLayout(new BorderLayout());
         setBackground(new Color(18,18,18));
