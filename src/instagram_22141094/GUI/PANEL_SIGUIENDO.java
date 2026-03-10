@@ -187,6 +187,18 @@ public class PANEL_SIGUIENDO extends JPanel {
     
     
     private void abrirPerfil(User u){
+        for (int i = 0; i < contentPanel.getComponentCount(); i++) {
+            if ("PERFIL_BUSCADO".equals(contentPanel.getComponent(i).getName())) {
+                contentPanel.remove(i);
+                break;
+            }
+        }
+        PANEL_PERFIL_VISTA vista = new PANEL_PERFIL_VISTA(
+            u, usuarioLogueado, loginManager, followersManager, cardLayout, contentPanel
+        );
+        vista.setName("PERFIL_BUSCADO");
+        contentPanel.add(vista, "PERFIL_BUSCADO");
+        cardLayout.show(contentPanel, "PERFIL_BUSCADO");
         
     }
 }
