@@ -92,7 +92,9 @@ public class BUSCAR_USUARIO extends JPanel {
     }
 
         
-        
+        private void buscarYMostrar(String texto){
+            
+        }
         
         
         
