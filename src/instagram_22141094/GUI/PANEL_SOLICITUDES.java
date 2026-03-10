@@ -14,6 +14,7 @@ import java.awt.Insets;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 /**
  *
@@ -76,7 +77,24 @@ public class PANEL_SOLICITUDES extends JPanel{
                 }
             }
         }
+        
+         GridBagConstraints gbcFill = new GridBagConstraints();
+        gbcFill.gridwidth = GridBagConstraints.REMAINDER;
+        gbcFill.weighty = 1.0;
+        gbcFill.fill = GridBagConstraints.VERTICAL;
+        gbcFill.gridy = solicitudes.length + 1;
+        listaPanel.add(new JPanel() {{ setBackground(new Color(18, 18, 18)); }}, gbcFill);
+
+        JScrollPane scroll = new JScrollPane(listaPanel);
+        scroll.setBorder(null);
+        scroll.getViewport().setBackground(new Color(18, 18, 18));
+        add(scroll, BorderLayout.CENTER);
+
+        revalidate();
+        repaint();
     }
+    
+    
     
     
     
