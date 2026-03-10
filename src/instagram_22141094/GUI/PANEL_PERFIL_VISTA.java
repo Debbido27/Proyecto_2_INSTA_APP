@@ -239,73 +239,94 @@ statsPanel.add(statSeguidores);
 statsPanel.add(statSiguiendo);
 infoPanel.add(statsPanel, gbc);
         // NOMBRE COMPLETO
-        gbc.gridx = 1; gbc.gridy = 2;
-JPanel datosPanel = new JPanel(new GridBagLayout());
-datosPanel.setBackground(new Color(18, 18, 18));
-
-GridBagConstraints dgbc = new GridBagConstraints();
-dgbc.anchor = GridBagConstraints.WEST;
-dgbc.gridwidth = GridBagConstraints.REMAINDER;
-dgbc.insets = new Insets(2, 0, 2, 0);
-
-// Nombre completo
-JLabel nombreLabel = new JLabel(userVisto.getFullname());
-nombreLabel.setFont(new Font("Arial", Font.BOLD, 14));
-nombreLabel.setForeground(Color.WHITE);
-datosPanel.add(nombreLabel, dgbc);
-
-// Género
-JLabel generoLabel = new JLabel("Género: " + userVisto.getGender());
-generoLabel.setFont(new Font("Arial", Font.PLAIN, 13));
-generoLabel.setForeground(new Color(180, 180, 180));
-datosPanel.add(generoLabel, dgbc);
-
-// Edad
-JLabel edadLabel = new JLabel("Edad: " + userVisto.getAge());
-edadLabel.setFont(new Font("Arial", Font.PLAIN, 13));
-edadLabel.setForeground(new Color(180, 180, 180));
-datosPanel.add(edadLabel, dgbc);
-
-// Fecha de registro
-JLabel fechaLabel = new JLabel("Miembro desde: " + userVisto.getRegisterDate());
-fechaLabel.setFont(new Font("Arial", Font.PLAIN, 13));
-fechaLabel.setForeground(new Color(180, 180, 180));
-datosPanel.add(fechaLabel, dgbc);
-
-// Tipo de cuenta
-JLabel tipoLabel = new JLabel("Cuenta: " + userVisto.getAccountType());
-tipoLabel.setFont(new Font("Arial", Font.PLAIN, 13));
-tipoLabel.setForeground(new Color(180, 180, 180));
-datosPanel.add(tipoLabel, dgbc);
-
-// Estado
-JLabel estadoLabel = new JLabel("Estado: " + userVisto.getStatus());
-estadoLabel.setFont(new Font("Arial", Font.PLAIN, 13));
-Color colorEstado = userVisto.getStatus().toString().equals("ACTIVE") ? new Color(0, 200, 100) : new Color(200, 50, 50);
-estadoLabel.setForeground(colorEstado);
-datosPanel.add(estadoLabel, dgbc);
-
-infoPanel.add(datosPanel, gbc);
-        panel.add(infoPanel, BorderLayout.NORTH);
         
-        JPanel sep = new JPanel();
-        sep.setBackground(new Color(38, 38, 38));
-        sep.setPreferredSize(new Dimension(0, 1));
-        panel.add(sep, BorderLayout.CENTER);
+        
+        
+     gbc.gridx = 1; gbc.gridy = 2;
 
-        // GRID
-        JPanel gridPanel = new JPanel(new java.awt.GridLayout(0, 4, 3, 3));
-        gridPanel.setBackground(new Color(18, 18, 18));
-        gridPanel.setBorder(BorderFactory.createEmptyBorder(3, 0, 0, 0));
-        for (int i = 0; i < 9; i++) {
-            JPanel celda = new JPanel();
-            celda.setBackground(new Color(30, 30, 30));
-            celda.setPreferredSize(new Dimension(300, 300));
-            gridPanel.add(celda);
-        }
-        panel.add(gridPanel, BorderLayout.SOUTH);
+boolean esCuentaPrivada = userVisto.getAccountType().toString().equals("PRIVATE");
+boolean loSigue = followersManager.estaSiguiendo(usuarioLogueado, userVisto.getUsername());
+boolean esMiPerfil = userVisto.getUsername().equals(usuarioLogueado);
+boolean puedeVerContenido = esMiPerfil || !esCuentaPrivada || loSigue;
 
-        return panel;
+if (puedeVerContenido) {
+    JPanel datosPanel = new JPanel(new GridBagLayout());
+    datosPanel.setBackground(new Color(18, 18, 18));
+
+    GridBagConstraints dgbc = new GridBagConstraints();
+    dgbc.anchor = GridBagConstraints.WEST;
+    dgbc.gridwidth = GridBagConstraints.REMAINDER;
+    dgbc.insets = new Insets(2, 0, 2, 0);
+
+    JLabel nombreLabel = new JLabel(userVisto.getFullname());
+    nombreLabel.setFont(new Font("Arial", Font.BOLD, 14));
+    nombreLabel.setForeground(Color.WHITE);
+    datosPanel.add(nombreLabel, dgbc);
+
+    JLabel generoLabel = new JLabel("Género: " + userVisto.getGender());
+    generoLabel.setFont(new Font("Arial", Font.PLAIN, 13));
+    generoLabel.setForeground(new Color(180, 180, 180));
+    datosPanel.add(generoLabel, dgbc);
+
+    JLabel edadLabel = new JLabel("Edad: " + userVisto.getAge());
+    edadLabel.setFont(new Font("Arial", Font.PLAIN, 13));
+    edadLabel.setForeground(new Color(180, 180, 180));
+    datosPanel.add(edadLabel, dgbc);
+
+    JLabel fechaLabel = new JLabel("Miembro desde: " + userVisto.getRegisterDate());
+    fechaLabel.setFont(new Font("Arial", Font.PLAIN, 13));
+    fechaLabel.setForeground(new Color(180, 180, 180));
+    datosPanel.add(fechaLabel, dgbc);
+
+    JLabel tipoLabel = new JLabel("Cuenta: " + userVisto.getAccountType());
+    tipoLabel.setFont(new Font("Arial", Font.PLAIN, 13));
+    tipoLabel.setForeground(new Color(180, 180, 180));
+    datosPanel.add(tipoLabel, dgbc);
+
+    JLabel estadoLabel = new JLabel("Estado: " + userVisto.getStatus());
+    estadoLabel.setFont(new Font("Arial", Font.PLAIN, 13));
+    Color colorEstado = userVisto.getStatus().toString().equals("ACTIVE") ? 
+        new Color(0, 200, 100) : new Color(200, 50, 50);
+    estadoLabel.setForeground(colorEstado);
+    datosPanel.add(estadoLabel, dgbc);
+
+    infoPanel.add(datosPanel, gbc);
+} else {
+    JLabel privadoLabel = new JLabel("Esta cuenta es privada");
+    privadoLabel.setFont(new Font("Arial", Font.BOLD, 14));
+    privadoLabel.setForeground(new Color(160, 160, 160));
+    infoPanel.add(privadoLabel, gbc);
+}
+
+panel.add(infoPanel, BorderLayout.NORTH);
+
+JPanel sep = new JPanel();
+sep.setBackground(new Color(38, 38, 38));
+sep.setPreferredSize(new Dimension(0, 1));
+panel.add(sep, BorderLayout.CENTER);
+
+if (puedeVerContenido) {
+    JPanel gridPanel = new JPanel(new java.awt.GridLayout(0, 4, 3, 3));
+    gridPanel.setBackground(new Color(18, 18, 18));
+    gridPanel.setBorder(BorderFactory.createEmptyBorder(3, 0, 0, 0));
+    for (int i = 0; i < 9; i++) {
+        JPanel celda = new JPanel();
+        celda.setBackground(new Color(30, 30, 30));
+        celda.setPreferredSize(new Dimension(300, 300));
+        gridPanel.add(celda);
+    }
+    panel.add(gridPanel, BorderLayout.SOUTH);
+} else {
+    JPanel bloqueado = new JPanel(new GridBagLayout());
+    bloqueado.setBackground(new Color(18, 18, 18));
+    JLabel lockLabel = new JLabel("🔒 Sigue esta cuenta para ver sus publicaciones");
+    lockLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+    lockLabel.setForeground(new Color(160, 160, 160));
+    bloqueado.add(lockLabel);
+    panel.add(bloqueado, BorderLayout.SOUTH);
+}
+
+return panel;
     }
     
       private JLabel crearStat(String numero, String texto) {
