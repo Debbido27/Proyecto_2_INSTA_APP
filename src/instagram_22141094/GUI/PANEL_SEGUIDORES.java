@@ -30,6 +30,9 @@ public class PANEL_SEGUIDORES extends JPanel {
         construir();
     }
     
+    public void construir(){
+        
+    }
     
     
 }
