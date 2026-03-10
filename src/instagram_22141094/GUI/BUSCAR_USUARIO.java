@@ -5,9 +5,15 @@ import Instagram_login_user.Login_Manager;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 
 public class BUSCAR_USUARIO extends JPanel {
@@ -33,7 +39,32 @@ public class BUSCAR_USUARIO extends JPanel {
         JPanel buscarPanel = new JPanel (new GridBagLayout());
         buscarPanel.setBackground(new Color(18,18,18));
         buscarPanel.setBorder(BorderFactory.createEmptyBorder(30,60,20,60));
-        
+         GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1.0;
+
+        JLabel titulo = new JLabel("Buscar usuarios");
+        titulo.setFont(new Font("Arial", Font.BOLD, 24));
+        titulo.setForeground(Color.WHITE);
+        gbc.gridy = 0;
+        gbc.insets = new Insets(0, 0, 15, 0);
+        buscarPanel.add(titulo, gbc);
+
+        JTextField campoBuscar = new JTextField();
+        campoBuscar.setBackground(new Color(54, 54, 54));
+        campoBuscar.setForeground(Color.WHITE);
+        campoBuscar.setFont(new Font("Arial", Font.PLAIN, 16));
+        campoBuscar.setPreferredSize(new Dimension(400, 40));
+        campoBuscar.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(80, 80, 80)),
+            BorderFactory.createEmptyBorder(5, 10, 5, 10)
+        ));
+        gbc.gridy = 1;
+        gbc.insets = new Insets(0, 0, 0, 0);
+        buscarPanel.add(campoBuscar, gbc);
+
+        add(buscarPanel, BorderLayout.NORTH);
+
         
     }
     
