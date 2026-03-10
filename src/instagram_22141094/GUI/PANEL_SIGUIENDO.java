@@ -7,6 +7,7 @@ import Instagram_login_user.User;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -166,6 +167,22 @@ public class PANEL_SIGUIENDO extends JPanel {
             construir();
         });
         card.add(dejarBtn, BorderLayout.EAST);
+         card.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        card.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                if (!(e.getSource() instanceof JButton)) abrirPerfil(u);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                card.setBackground(new Color(45, 45, 45));
+                infoPanel.setBackground(new Color(45, 45, 45));
+            }
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                card.setBackground(new Color(30, 30, 30));
+                infoPanel.setBackground(new Color(30, 30, 30));
+            }
+        });
+
+        return card;
     }
     
 }
