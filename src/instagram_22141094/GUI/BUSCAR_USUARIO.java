@@ -119,6 +119,11 @@ public class BUSCAR_USUARIO extends JPanel {
                 resultadosPanel.revalidate();
                 resultadosPanel.repaint();
             }
+            
+            
+            private JPanel crearCard(User u){
+                
+            }
  
             
             
