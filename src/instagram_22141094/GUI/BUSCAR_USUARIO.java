@@ -2,6 +2,7 @@
 package instagram_22141094.GUI;
 
 import Instagram_login_user.Login_Manager;
+import Instagram_login_user.User;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
@@ -93,6 +94,33 @@ public class BUSCAR_USUARIO extends JPanel {
 
         
         private void buscarYMostrar(String texto){
+            resultadosPanel.removeAll();
+            
+            User[] resultados = loginManager.buscarUsuariosCoincidentes(texto);
+             GridBagConstraints gbc = new GridBagConstraints();
+            gbc.gridwidth = GridBagConstraints.REMAINDER;
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+            gbc.weightx = 1.0;
+            gbc.insets = new Insets(5, 60, 5, 60);
+
+            for (int i = 0; i < resultados.length; i++) {
+                User u = resultados[i];
+                JPanel card = crearCard(u);
+                gbc.gridy = i;
+                resultadosPanel.add(card, gbc);
+                
+                 GridBagConstraints gbcFill = new GridBagConstraints();
+                gbcFill.gridwidth = GridBagConstraints.REMAINDER;
+                gbcFill.weighty = 1.0;
+                gbcFill.fill = GridBagConstraints.VERTICAL;
+                gbcFill.gridy = resultados.length;
+                resultadosPanel.add(new JPanel() {{ setBackground(new Color(18, 18, 18)); }}, gbcFill);
+
+                resultadosPanel.revalidate();
+                resultadosPanel.repaint();
+            }
+ 
+            
             
         }
         
