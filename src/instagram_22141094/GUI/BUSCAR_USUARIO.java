@@ -13,6 +13,7 @@ import java.awt.Insets;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 
@@ -64,9 +65,43 @@ public class BUSCAR_USUARIO extends JPanel {
         buscarPanel.add(campoBuscar, gbc);
 
         add(buscarPanel, BorderLayout.NORTH);
+         
+         resultadosPanel = new JPanel();
+        resultadosPanel.setLayout(new GridBagLayout());
+        resultadosPanel.setBackground(new Color(18, 18, 18));
+
+        JScrollPane scroll = new JScrollPane(resultadosPanel);
+        scroll.setBackground(new Color(18, 18, 18));
+        scroll.setBorder(null);
+        scroll.getViewport().setBackground(new Color(18, 18, 18));
+        add(scroll, BorderLayout.CENTER);
+
+        // Buscar mientras escribe
+        campoBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent e) {
+                String texto = campoBuscar.getText().trim();
+                if (!texto.isEmpty()) {
+                    buscarYMostrar(texto);
+                } else {
+                    resultadosPanel.removeAll();
+                    resultadosPanel.revalidate();
+                    resultadosPanel.repaint();
+                }
+            }
+        });
+    }
 
         
-    }
-    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     
 }
