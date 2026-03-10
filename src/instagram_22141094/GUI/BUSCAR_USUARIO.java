@@ -10,8 +10,11 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Insets;
+import java.io.File;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -120,11 +123,92 @@ public class BUSCAR_USUARIO extends JPanel {
                 resultadosPanel.repaint();
             }
             
+        }
+            
             
             private JPanel crearCard(User u){
                 
+                JPanel card = new JPanel(new BorderLayout());
+                card.setBackground(new Color(30,30,30));
+                card.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(54, 54, 54)),
+                BorderFactory.createEmptyBorder(10, 15, 10, 15)
+            ));
+            
+             card.setPreferredSize(new Dimension(0,70));
+             card.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+             
+                JLabel fotoLabel = new JLabel();
+                fotoLabel.setPreferredSize(new Dimension(50, 50));
+                fotoLabel.setBackground(new Color(60, 60, 60));
+                fotoLabel.setOpaque(true);
+                fotoLabel.setHorizontalAlignment(JLabel.CENTER);
+                fotoLabel.setFont(new Font("Arial", Font.BOLD, 20));
+                fotoLabel.setForeground(Color.WHITE);
+
+               String profilePath = u.getProfilePath();
+        if (profilePath != null && !profilePath.isEmpty()
+                && !profilePath.equals("USUARIO_DEFAULT.png")
+                && !profilePath.equals("image.jpg")
+                && new File(profilePath).exists()) {
+            try {
+                ImageIcon icon = new ImageIcon(profilePath);
+                Image img = icon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+                fotoLabel.setIcon(new ImageIcon(img));
+            } catch (Exception ex) {
+                fotoLabel.setText(u.getUsername().substring(0, 1).toUpperCase());
             }
- 
+        } else {
+            try {
+                ImageIcon icon = new ImageIcon(getClass().getResource("USUARIO_DEFAULT.png"));
+                Image img = icon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+                fotoLabel.setIcon(new ImageIcon(img));
+            } catch (Exception ex) {
+                fotoLabel.setText(u.getUsername().substring(0, 1).toUpperCase());
+            }
+        }
+        
+        card.add(fotoLabel, BorderLayout.WEST);
+
+        // Info
+        JPanel infoPanel = new JPanel(new GridBagLayout());
+        infoPanel.setBackground(new Color(30, 30, 30));
+        infoPanel.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 0));
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.anchor = GridBagConstraints.WEST;
+
+        JLabel usernameLabel = new JLabel(u.getUsername());
+        usernameLabel.setFont(new Font("Arial", Font.BOLD, 15));
+        usernameLabel.setForeground(Color.WHITE);
+        infoPanel.add(usernameLabel, gbc);
+
+        JLabel nombreLabel = new JLabel(u.getFullname());
+        nombreLabel.setFont(new Font("Arial", Font.PLAIN, 13));
+        nombreLabel.setForeground(new Color(160, 160, 160));
+        infoPanel.add(nombreLabel, gbc);
+
+        card.add(infoPanel, BorderLayout.CENTER);
+            
+              card.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                abrirPerfil(u);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                card.setBackground(new Color(45, 45, 45));
+                infoPanel.setBackground(new Color(45, 45, 45));
+            }
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                card.setBackground(new Color(30, 30, 30));
+                infoPanel.setBackground(new Color(30, 30, 30));
+            }
+        });
+
+        return card;
+        
+            }
+         
             
             
         }
@@ -139,4 +223,4 @@ public class BUSCAR_USUARIO extends JPanel {
         
         
     
-}
+
