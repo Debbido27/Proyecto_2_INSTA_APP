@@ -208,6 +208,14 @@ public class BUSCAR_USUARIO extends JPanel {
         return card;
         
             }
+            
+            
+       
+      private void abrirPerfil(User u){
+          
+          
+          
+      }
          
             
             
