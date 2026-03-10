@@ -22,6 +22,20 @@ public class Followers_Manager {
         agregarLinea(getFollowingPath(follower), seguido);
         agregarLinea(getFollowersPath(seguido), follower);
         return true;
-    } 
+    }
+    
+    public boolean dejarDeSeguir(String follower, String seguido) {
+        boolean a = eliminarLinea(getFollowingPath(follower), seguido);
+        boolean b = eliminarLinea(getFollowersPath(seguido), follower);
+        return a && b;
+    }
+
+    public boolean estaSiguiendo(String follower, String seguido) {
+        return contieneLinea(getFollowingPath(follower), seguido);
+    }
+
+    public boolean tieneSolicitudPendiente(String follower, String seguido) {
+        return contieneLinea(getSolicitudesPath(seguido), follower);
+    }
     
 }
