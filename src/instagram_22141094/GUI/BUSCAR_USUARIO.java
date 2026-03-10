@@ -29,18 +29,18 @@ public class BUSCAR_USUARIO extends JPanel {
     private JPanel contentPanel;
     private JPanel resultadosPanel;
     Followers_Manager followersManager;
-    public BUSCAR_USUARIO(String usuarioLogueado, Login_Manager loginManager, CardLayout cardLayout, JPanel contentPanel,
-            Followers_Manager followersManager){
-        
-        this.usuarioLogueado = usuarioLogueado;
-        this.loginManager = loginManager;
-        this.cardLayout = cardLayout;
-        this.contentPanel = contentPanel;
-        this.followersManager=followersManager;
-        setLayout(new BorderLayout());
-        setBackground(new Color(18,18,18));
-        construir();
-    }
+   public BUSCAR_USUARIO(String usuarioLogueado, Login_Manager loginManager,
+                       Followers_Manager followersManager,
+                       CardLayout cardLayout, JPanel contentPanel) {
+    this.usuarioLogueado = usuarioLogueado;
+    this.loginManager = loginManager;
+    this.followersManager = followersManager;
+    this.cardLayout = cardLayout;
+    this.contentPanel = contentPanel;
+    setLayout(new BorderLayout());
+    setBackground(new Color(18, 18, 18));
+    construir();
+}
     
     
     private void construir(){
@@ -225,8 +225,8 @@ public class BUSCAR_USUARIO extends JPanel {
         }
 
         PANEL_PERFIL_VISTA vista = new PANEL_PERFIL_VISTA(
-            u, usuarioLogueado, loginManager, cardLayout, contentPanel
-        );
+    u, usuarioLogueado, loginManager, followersManager, cardLayout, contentPanel
+);
         vista.setName("PERFIL_BUSCADO");
         contentPanel.add(vista, "PERFIL_BUSCADO");
         cardLayout.show(contentPanel, "PERFIL_BUSCADO");

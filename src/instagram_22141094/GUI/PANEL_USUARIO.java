@@ -39,17 +39,16 @@ public class PANEL_USUARIO extends JPanel{
     private User userActual;
     Followers_Manager followersManager = new Followers_Manager();
     Login_Manager loginManager;
-    public PANEL_USUARIO(String usuario,Login_Manager loginManager,Followers_Manager followersManager){
-      this.usuario=usuario;
-      this.usuario=usuario;
-      this.loginManager=loginManager;
-      this.followersManager = followersManager;
-        setLayout(new BorderLayout());
-      setPreferredSize(new Dimension(1200,800));
-      initFrame();
     
-      
-    }
+    
+   public PANEL_USUARIO(String usuario, Login_Manager loginManager){
+    this.usuario = usuario;
+    this.loginManager = loginManager;
+    this.followersManager = new Followers_Manager();
+    setLayout(new BorderLayout());
+    setPreferredSize(new Dimension(1200, 800));
+    initFrame();
+}
     
     private void initFrame() {
     
@@ -70,7 +69,9 @@ public class PANEL_USUARIO extends JPanel{
     contentPanel.add(crearPerfilPanel(), "PERFIL");
     contentPanel.add(crearSubirPanel(), "SUBIR");
     contentPanel.add(crearPerfilMainPanel(), "PERFIL_MAIN");
-
+    contentPanel.add(new PANEL_SEGUIDORES(usuario, loginManager, followersManager, cardLayout, contentPanel), "SEGUIDORES");
+    contentPanel.add(new PANEL_SIGUIENDO(usuario, loginManager, followersManager, cardLayout, contentPanel), "SIGUIENDO");
+    contentPanel.add(new PANEL_SOLICITUDES(usuario, loginManager, followersManager, cardLayout, contentPanel), "SOLICITUDES");
     mainPanel.add(contentPanel, BorderLayout.CENTER);
     
     add(mainPanel);
@@ -105,12 +106,12 @@ public class PANEL_USUARIO extends JPanel{
         feedBtn.addActionListener(e -> cardLayout.show(contentPanel, "FEED"));
         buscarBtn.addActionListener(e -> cardLayout.show(contentPanel, "BUSCAR"));
         inboxBtn.addActionListener(e -> cardLayout.show(contentPanel, "INBOX"));
-        perfilBtn.addActionListener(e -> {
-            userActual = loginManager.buscarUser(usuario);
-            contentPanel.remove(contentPanel.getComponentCount() - 1); // remueve PERFIL_MAIN viejo
-            contentPanel.add(crearPerfilMainPanel(), "PERFIL_MAIN");
-            cardLayout.show(contentPanel, "PERFIL_MAIN");
-        });      
+       perfilBtn.addActionListener(e -> {
+    userActual = loginManager.buscarUser(usuario);
+    contentPanel.remove(contentPanel.getComponentCount() - 1);
+    contentPanel.add(crearPerfilMainPanel(), "PERFIL_MAIN");
+    cardLayout.show(contentPanel, "PERFIL_MAIN");
+});   
         subirBtn.addActionListener(e -> cardLayout.show(contentPanel, "SUBIR"));
 
         JButton cerrarSesionBtn = crearBotonMenu("Cerrar Sesion");
@@ -163,7 +164,7 @@ public class PANEL_USUARIO extends JPanel{
     private JPanel crearFeedPanel(){
         JPanel panel = new JPanel();
         panel.setBackground(new Color(18,18,18));
-        JLabel label = new JLabel("Feed posts", JLabel.CENTER);
+        JLabel label = new JLabel(" ", JLabel.CENTER);
         label.setFont(new Font("Arial", Font.BOLD, 24));
         label.setForeground(Color.WHITE);
         panel.add(label);
@@ -171,14 +172,14 @@ public class PANEL_USUARIO extends JPanel{
     }
     
     private JPanel crearBuscarPanel(){
-         return new BUSCAR_USUARIO(usuario, loginManager, cardLayout, contentPanel);
+    return new BUSCAR_USUARIO(usuario, loginManager, followersManager, cardLayout, contentPanel);
 
     }
     
     private JPanel crearInboxPanel(){
         JPanel panel = new JPanel();
         panel.setBackground(new Color(18,18,18));
-        JLabel label = new JLabel ("INBOX mensajes privados",JLabel.CENTER);
+        JLabel label = new JLabel ("  ",JLabel.CENTER);
         label.setFont(new Font("Arial",Font.BOLD,24));
         label.setForeground(Color.WHITE);
         panel.add(label);
@@ -188,7 +189,7 @@ public class PANEL_USUARIO extends JPanel{
     private JPanel crearSubirPanel(){
         JPanel panel = new JPanel();
         panel.setBackground(new Color(18,18,18));
-        JLabel label = new JLabel("Subir publicacion",JLabel.CENTER);
+        JLabel label = new JLabel(" ",JLabel.CENTER);
         label.setFont(new Font("Arial",Font.BOLD,24));
         label.setForeground(Color.WHITE);
         panel.add(label);
@@ -223,183 +224,167 @@ if(userActual == null) {
     usernameLabel.setForeground(Color.WHITE);
     panel.add(usernameLabel, gbc);
     
-    JTextField usernameField = new JTextField(usuario);
-    usernameField.setBackground(new Color(54, 54, 54));
-    usernameField.setForeground(Color.WHITE);
-    usernameField.setFont(new Font("Arial", Font.PLAIN, 14));
-    usernameField.setBorder(BorderFactory.createCompoundBorder(
-        BorderFactory.createLineBorder(new Color(80, 80, 80)),
-        BorderFactory.createEmptyBorder(8, 10, 8, 10)
-    ));
-    usernameField.setEditable(false); // No editable directamente
-    panel.add(usernameField, gbc);
-    
-    // Botón para cambiar username
-    JButton cambiarUsernameBtn = new JButton("Cambiar username");
-    cambiarUsernameBtn.setBackground(new Color(0, 149, 246));
-    cambiarUsernameBtn.setForeground(Color.WHITE);
-    cambiarUsernameBtn.setFont(new Font("Arial", Font.BOLD, 12));
-    cambiarUsernameBtn.setBorderPainted(false);
-    cambiarUsernameBtn.setFocusPainted(false);
-    cambiarUsernameBtn.addActionListener(e -> {
-        String nuevoUsername = JOptionPane.showInputDialog(this, "Nuevo nombre de usuario:");
-        if(nuevoUsername != null && !nuevoUsername.trim().isEmpty()) {
-            try {
-                if(loginManager.cambiarUsername(usuario, nuevoUsername)) {
-                    JOptionPane.showMessageDialog(this, "Username cambiado exitosamente");
-                    usuario = nuevoUsername; // Actualizar variable local
-                    usernameField.setText(nuevoUsername);
-                } else {
-                    JOptionPane.showMessageDialog(this, "Error: El username ya existe");
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(PANEL_USUARIO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    });
-    panel.add(cambiarUsernameBtn, gbc);
-    
-    // Campo Nombre completo
-    JLabel nombreLabel = new JLabel("Nombre completo:");
-    nombreLabel.setFont(new Font("Arial", Font.BOLD, 14));
-    nombreLabel.setForeground(Color.WHITE);
-    panel.add(nombreLabel, gbc);
-    
-    JTextField nombreField = new JTextField(userActual != null ? userActual.getFullname() : "");
-    nombreField.setBackground(new Color(54, 54, 54));
-    nombreField.setForeground(Color.WHITE);
-    nombreField.setFont(new Font("Arial", Font.PLAIN, 14));
-    nombreField.setBorder(BorderFactory.createCompoundBorder(
-        BorderFactory.createLineBorder(new Color(80, 80, 80)),
-        BorderFactory.createEmptyBorder(8, 10, 8, 10)
-    ));
-    panel.add(nombreField, gbc);
-    nombreField.setEditable(true);
-    // Campo Edad
-    JLabel edadLabel = new JLabel("Edad:");
-    edadLabel.setFont(new Font("Arial", Font.BOLD, 14));
-    edadLabel.setForeground(Color.WHITE);
-    panel.add(edadLabel, gbc);
-    
-    JTextField edadField = new JTextField(userActual != null ? String.valueOf(userActual.getAge()) : "");
-    edadField.setBackground(new Color(54, 54, 54));
-    edadField.setForeground(Color.WHITE);
-    edadField.setFont(new Font("Arial", Font.PLAIN, 14));
-    edadField.setBorder(BorderFactory.createCompoundBorder(
-        BorderFactory.createLineBorder(new Color(80, 80, 80)),
-        BorderFactory.createEmptyBorder(8, 10, 8, 10)
-    ));
+  JTextField usernameField = new JTextField(usuario);
+usernameField.setBackground(new Color(54, 54, 54));
+usernameField.setForeground(Color.WHITE);
+usernameField.setFont(new Font("Arial", Font.PLAIN, 14));
+usernameField.setBorder(BorderFactory.createCompoundBorder(
+    BorderFactory.createLineBorder(new Color(80, 80, 80)),
+    BorderFactory.createEmptyBorder(8, 10, 8, 10)
+));
+usernameField.setEditable(true);
+panel.add(usernameField, gbc);
+
+// Campo Nombre completo
+JLabel nombreLabel = new JLabel("Nombre completo:");
+nombreLabel.setFont(new Font("Arial", Font.BOLD, 14));
+nombreLabel.setForeground(Color.WHITE);
+panel.add(nombreLabel, gbc);
+
+JTextField nombreField = new JTextField(userActual != null ? userActual.getFullname() : "");
+nombreField.setBackground(new Color(54, 54, 54));
+nombreField.setForeground(Color.WHITE);
+nombreField.setFont(new Font("Arial", Font.PLAIN, 14));
+nombreField.setBorder(BorderFactory.createCompoundBorder(
+    BorderFactory.createLineBorder(new Color(80, 80, 80)),
+    BorderFactory.createEmptyBorder(8, 10, 8, 10)
+));
+nombreField.setEditable(true);
+panel.add(nombreField, gbc);
+
+// Campo Edad
+JLabel edadLabel = new JLabel("Edad:");
+edadLabel.setFont(new Font("Arial", Font.BOLD, 14));
+edadLabel.setForeground(Color.WHITE);
+panel.add(edadLabel, gbc);
+
+JTextField edadField = new JTextField(userActual != null ? String.valueOf(userActual.getAge()) : "");
+edadField.setBackground(new Color(54, 54, 54));
+edadField.setForeground(Color.WHITE);
+edadField.setFont(new Font("Arial", Font.PLAIN, 14));
+edadField.setBorder(BorderFactory.createCompoundBorder(
+    BorderFactory.createLineBorder(new Color(80, 80, 80)),
+    BorderFactory.createEmptyBorder(8, 10, 8, 10)
+));
 edadField.setEditable(true);
-    panel.add(edadField, gbc);
-    
-    // Campo Género
-    JLabel generoLabel = new JLabel("Género:");
-    generoLabel.setFont(new Font("Arial", Font.BOLD, 14));
-    generoLabel.setForeground(Color.WHITE);
-    panel.add(generoLabel, gbc);
-    
-    JComboBox<Gender> generoCombo = new JComboBox<>(Gender.values());
-    generoCombo.setBackground(new Color(54, 54, 54));
-    generoCombo.setForeground(Color.WHITE);
-    generoCombo.setFont(new Font("Arial", Font.PLAIN, 14));
-    if(userActual != null) {
-        generoCombo.setSelectedItem(userActual.getGender());
-    }
-    panel.add(generoCombo, gbc);
-    
-    // Campo Tipo de cuenta
-    JLabel tipoLabel = new JLabel("Tipo de cuenta:");
-    tipoLabel.setFont(new Font("Arial", Font.BOLD, 14));
-    tipoLabel.setForeground(Color.WHITE);
-    panel.add(tipoLabel, gbc);
-    
-    JComboBox<AccountType> tipoCombo = new JComboBox<>(AccountType.values());
-    tipoCombo.setBackground(new Color(54, 54, 54));
-    tipoCombo.setForeground(Color.WHITE);
-    tipoCombo.setFont(new Font("Arial", Font.PLAIN, 14));
-    if(userActual != null) {
-        tipoCombo.setSelectedItem(userActual.getAccountType());
-    }
-    panel.add(tipoCombo, gbc);
-    
-    // Foto de perfil
-    JLabel fotoLabel = new JLabel("Foto de perfil:");
-    fotoLabel.setFont(new Font("Arial", Font.BOLD, 14));
-    fotoLabel.setForeground(Color.WHITE);
-    panel.add(fotoLabel, gbc);
-    
-    
-    ///
-    JPanel fotoPanel = new JPanel(new BorderLayout());
-    fotoPanel.setBackground(new Color(54, 54, 54));
-    fotoPanel.setPreferredSize(new Dimension(300, 40));
-    JTextField rutaFotoField = new JTextField("");
-    rutaFotoField.setPreferredSize(new Dimension(300, 35));
+panel.add(edadField, gbc);
 
-    rutaFotoField.setBackground(new Color(54, 54, 54));
-    rutaFotoField.setForeground(Color.WHITE);
-    rutaFotoField.setFont(new Font("Arial", Font.PLAIN, 12));
-    rutaFotoField.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-    rutaFotoField.setEditable(true);
-    fotoPanel.add(rutaFotoField, BorderLayout.CENTER);
+// Campo Género
+JLabel generoLabel = new JLabel("Género:");
+generoLabel.setFont(new Font("Arial", Font.BOLD, 14));
+generoLabel.setForeground(Color.WHITE);
+panel.add(generoLabel, gbc);
 
-    panel.add(fotoPanel, gbc);
-    
-    //
-    
-    
-    
-    // Cambiar contraseña
-    JLabel passLabel = new JLabel("Cambiar contraseña:");
-    passLabel.setFont(new Font("Arial", Font.BOLD, 14));
-    passLabel.setForeground(Color.WHITE);
-    panel.add(passLabel, gbc);
-    
-    JButton cambiarPassBtn = new JButton("Cambiar contraseña");
-    cambiarPassBtn.setBackground(new Color(0, 149, 246));
-    cambiarPassBtn.setForeground(Color.WHITE);
-    cambiarPassBtn.setFont(new Font("Arial", Font.BOLD, 14));
-    cambiarPassBtn.setBorderPainted(false);
-    
-    
-    cambiarPassBtn.addActionListener(e -> {
-    String newPass = JOptionPane.showInputDialog(this, "Nueva contraseña:");
-    if(newPass != null && !newPass.trim().isEmpty()) {
-        try {
-            if(loginManager.cambiarPassword(usuario, newPass)) {
-                
-                
-                // Actualizar la referencia del usuario
-                userActual = loginManager.buscarUser(usuario);
-                
-                // Opcional: Mostrar confirmación adicional
-                System.out.println("Contraseña actualizada para: " + usuario);
-            } else {
-                JOptionPane.showMessageDialog(this, "Error al cambiar contraseña");
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(PANEL_USUARIO.class.getName()).log(Level.SEVERE, null, ex);
-        }
+JComboBox<Gender> generoCombo = new JComboBox<>(Gender.values());
+generoCombo.setBackground(new Color(54, 54, 54));
+generoCombo.setForeground(Color.WHITE);
+generoCombo.setFont(new Font("Arial", Font.PLAIN, 14));
+if(userActual != null) {
+    generoCombo.setSelectedItem(userActual.getGender());
+}
+panel.add(generoCombo, gbc);
+
+// Campo Tipo de cuenta
+JLabel tipoLabel = new JLabel("Tipo de cuenta:");
+tipoLabel.setFont(new Font("Arial", Font.BOLD, 14));
+tipoLabel.setForeground(Color.WHITE);
+panel.add(tipoLabel, gbc);
+
+JComboBox<AccountType> tipoCombo = new JComboBox<>(AccountType.values());
+tipoCombo.setBackground(new Color(54, 54, 54));
+tipoCombo.setForeground(Color.WHITE);
+tipoCombo.setFont(new Font("Arial", Font.PLAIN, 14));
+if(userActual != null) {
+    tipoCombo.setSelectedItem(userActual.getAccountType());
+}
+panel.add(tipoCombo, gbc);
+
+// Foto de perfil
+JLabel fotoLabel = new JLabel("Foto de perfil:");
+fotoLabel.setFont(new Font("Arial", Font.BOLD, 14));
+fotoLabel.setForeground(Color.WHITE);
+panel.add(fotoLabel, gbc);
+
+JPanel fotoPanel = new JPanel(new BorderLayout());
+fotoPanel.setBackground(new Color(54, 54, 54));
+fotoPanel.setPreferredSize(new Dimension(300, 40));
+JTextField rutaFotoField = new JTextField("");
+rutaFotoField.setPreferredSize(new Dimension(300, 35));
+rutaFotoField.setBackground(new Color(54, 54, 54));
+rutaFotoField.setForeground(Color.WHITE);
+rutaFotoField.setFont(new Font("Arial", Font.PLAIN, 12));
+rutaFotoField.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+rutaFotoField.setEditable(true);
+fotoPanel.add(rutaFotoField, BorderLayout.CENTER);
+panel.add(fotoPanel, gbc);
+
+// Campo Contraseña
+JLabel passLabel = new JLabel("Nueva contraseña:");
+passLabel.setFont(new Font("Arial", Font.BOLD, 14));
+passLabel.setForeground(Color.WHITE);
+panel.add(passLabel, gbc);
+
+JTextField passField = new JTextField("");
+passField.setBackground(new Color(54, 54, 54));
+passField.setForeground(Color.WHITE);
+passField.setFont(new Font("Arial", Font.PLAIN, 14));
+passField.setBorder(BorderFactory.createCompoundBorder(
+    BorderFactory.createLineBorder(new Color(80, 80, 80)),
+    BorderFactory.createEmptyBorder(8, 10, 8, 10)
+));
+passField.setEditable(true);
+panel.add(passField, gbc);
+
+JButton eliminarBtn = new JButton("ELIMINAR CUENTA");
+eliminarBtn.setBackground(new Color(200, 30, 30));
+eliminarBtn.setForeground(Color.WHITE);
+eliminarBtn.setFont(new Font("Arial", Font.BOLD, 14));
+eliminarBtn.setBorderPainted(false);
+eliminarBtn.setFocusPainted(false);
+eliminarBtn.setPreferredSize(new Dimension(250, 45));
+
+eliminarBtn.addActionListener(e -> {
+    int confirm = JOptionPane.showConfirmDialog(
+        this,
+        "¿Seguro que quieres eliminar tu cuenta? ",
+        "Eliminar cuenta",
+        JOptionPane.YES_NO_OPTION,
+        JOptionPane.WARNING_MESSAGE
+    );
+    if (confirm == JOptionPane.YES_OPTION) {
+        loginManager.eliminarUsuario(usuario);
+        JFrame frame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+        frame.dispose();
+        new LOGIN().setVisible(true);
     }
 });
-    panel.add(cambiarPassBtn, gbc);
-    
-    // Botón Guardar cambios
-    JButton guardarBtn = new JButton("GUARDAR CAMBIOS");
-    guardarBtn.setBackground(new Color(0, 149, 246));
-    guardarBtn.setForeground(Color.WHITE);
-    guardarBtn.setFont(new Font("Arial", Font.BOLD, 16));
-    guardarBtn.setBorderPainted(false);
-    guardarBtn.setFocusPainted(false);
-    guardarBtn.setPreferredSize(new Dimension(250, 45));
-    
-    
-   guardarBtn.addActionListener(e -> {
+
+gbc.insets = new Insets(20, 50, 5, 50);
+panel.add(eliminarBtn, gbc);
+// Botón Guardar cambios
+JButton guardarBtn = new JButton("GUARDAR CAMBIOS");
+guardarBtn.setBackground(new Color(0, 149, 246));
+guardarBtn.setForeground(Color.WHITE);
+guardarBtn.setFont(new Font("Arial", Font.BOLD, 16));
+guardarBtn.setBorderPainted(false);
+guardarBtn.setFocusPainted(false);
+guardarBtn.setPreferredSize(new Dimension(250, 45));
+
+guardarBtn.addActionListener(e -> {
     try {
+        String nuevoUsername = usernameField.getText().trim();
         String nuevoNombre = nombreField.getText().trim();
         int nuevaEdad = Integer.parseInt(edadField.getText().trim());
         Gender nuevoGenero = (Gender) generoCombo.getSelectedItem();
         AccountType nuevoTipo = (AccountType) tipoCombo.getSelectedItem();
+
+        if(!nuevoUsername.isEmpty() && !nuevoUsername.equals(usuario)) {
+            if(!loginManager.cambiarUsername(usuario, nuevoUsername)) {
+                JOptionPane.showMessageDialog(this, "Error: El username ya existe");
+                return;
+            }
+            usuario = nuevoUsername;
+        }
 
         if(!nuevoNombre.equals(userActual.getFullname()))
             loginManager.cambiarNombre(usuario, nuevoNombre);
@@ -413,6 +398,11 @@ edadField.setEditable(true);
         if(nuevoTipo != userActual.getAccountType())
             loginManager.cambiarTipoCuenta(usuario, nuevoTipo);
 
+        String nuevaPass = passField.getText().trim();
+        if(!nuevaPass.isEmpty()) {
+            loginManager.cambiarPassword(usuario, nuevaPass);
+        }
+
         String nuevaRuta = rutaFotoField.getText().trim();
         if(!nuevaRuta.isEmpty()) {
             File archivo = new File(nuevaRuta);
@@ -422,13 +412,10 @@ edadField.setEditable(true);
                 JOptionPane.showMessageDialog(this, "Ruta de foto no válida, se mantendrá la actual");
             }
         }
-        
-        
-        // Recargar userActual con los datos frescos
+
         userActual = loginManager.buscarUser(usuario);
         contentPanel.remove(contentPanel.getComponentCount() - 1);
         contentPanel.add(crearPerfilMainPanel(), "PERFIL_MAIN");
-        JOptionPane.showMessageDialog(this, "Cambios guardados exitosamente");
 
     } catch(NumberFormatException ex){
         JOptionPane.showMessageDialog(this, "Edad debe ser un número válido");
@@ -436,22 +423,21 @@ edadField.setEditable(true);
         Logger.getLogger(PANEL_USUARIO.class.getName()).log(Level.SEVERE, null, ex);
     }
 });
-    
-    gbc.insets = new Insets(30, 50, 20, 50);
-    panel.add(guardarBtn, gbc);
-    
-    return panel;
+
+gbc.insets = new Insets(30, 50, 20, 50);
+panel.add(guardarBtn, gbc);
+
+return panel;
 }
+
     
-    
-    private JPanel crearPerfilMainPanel(){
+  private JPanel crearPerfilMainPanel(){
     if(userActual == null) userActual = loginManager.buscarUser(usuario);
     PANEL_PERFIL_VISTA vista = new PANEL_PERFIL_VISTA(
         userActual, usuario, loginManager, followersManager, cardLayout, contentPanel
     );
     return vista;
-}
-    
+}  
     
     
     

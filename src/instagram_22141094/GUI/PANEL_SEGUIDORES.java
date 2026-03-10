@@ -17,6 +17,7 @@ import java.awt.Insets;
 import java.io.File;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -161,6 +162,18 @@ public class PANEL_SEGUIDORES extends JPanel {
 
         card.add(infoPanel, BorderLayout.CENTER);
 
+        JButton eliminarBtn = new JButton("Eliminar");
+eliminarBtn.setBackground(new Color(200, 30, 30));
+eliminarBtn.setForeground(Color.WHITE);
+eliminarBtn.setFont(new Font("Arial", Font.BOLD, 12));
+eliminarBtn.setBorderPainted(false);
+eliminarBtn.setFocusPainted(false);
+eliminarBtn.addActionListener(e -> {
+    followersManager.dejarDeSeguir(u.getUsername(), usuarioLogueado);
+    construir();
+});
+card.add(eliminarBtn, BorderLayout.EAST);
+        
         // Click para ver perfil
         card.setCursor(new Cursor(Cursor.HAND_CURSOR));
         card.addMouseListener(new java.awt.event.MouseAdapter() {
