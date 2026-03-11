@@ -10,6 +10,17 @@ public class Post {
  private String tipoMedia;
  private long fecha;
  
+  public Post(String username, String contenido, String hashtags, String menciones, String rutaImange, String tipoMedia, long fecha){
+      this.username=username;
+      this.contenido=contenido;
+      this.hashtags=hashtags;
+      this.menciones=menciones;
+      this.rutaImagen=rutaImagen;
+      this.tipoMedia=tipoMedia;
+      this.fecha=fecha;
+  }
+  
+  
     
  
 }
