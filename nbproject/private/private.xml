@@ -3,9 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Dell/Desktop/PROYECTO_INSTAGRAM/INSTAGRAM/INSTAGRAM_22141094/src/Instagram_login_user/User.java</file>
+            <file>file:/C:/Users/Dell/Desktop/PROYECTO_INSTAGRAM/INSTAGRAM/INSTAGRAM_22141094/src/instagram_22141094/GUI/PANEL_SIGUIENDO.java</file>
+            <file>file:/C:/Users/Dell/Desktop/PROYECTO_INSTAGRAM/INSTAGRAM/INSTAGRAM_22141094/src/instagram_22141094/GUI/PANEL_SOLICITUDES.java</file>
             <file>file:/C:/Users/Dell/Desktop/PROYECTO_INSTAGRAM/INSTAGRAM/INSTAGRAM_22141094/src/instagram_22141094/GUI/PANEL_USUARIO.java</file>
-            <file>file:/C:/Users/Dell/Desktop/PROYECTO_INSTAGRAM/INSTAGRAM/INSTAGRAM_22141094/src/Instagram_login_user/Login_Manager.java</file>
+            <file>file:/C:/Users/Dell/Desktop/PROYECTO_INSTAGRAM/INSTAGRAM/INSTAGRAM_22141094/src/instagram_22141094/GUI/BUSCAR_USUARIO.java</file>
+            <file>file:/C:/Users/Dell/Desktop/PROYECTO_INSTAGRAM/INSTAGRAM/INSTAGRAM_22141094/src/instagram_22141094/GUI/PANEL_PERFIL_VISTA.java</file>
+            <file>file:/C:/Users/Dell/Desktop/PROYECTO_INSTAGRAM/INSTAGRAM/INSTAGRAM_22141094/src/instagram_22141094/GUI/PANEL_SEGUIDORES.java</file>
+            <file>file:/C:/Users/Dell/Desktop/PROYECTO_INSTAGRAM/INSTAGRAM/INSTAGRAM_22141094/src/Instagram_login_user/Followers_Manager.java</file>
             <file>file:/C:/Users/Dell/Desktop/PROYECTO_INSTAGRAM/INSTAGRAM/INSTAGRAM_22141094/src/instagram_22141094/GUI/LOGIN.java</file>
         </group>
     </open-files>

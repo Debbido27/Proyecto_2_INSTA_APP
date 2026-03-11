@@ -319,7 +319,7 @@ if (puedeVerContenido) {
 } else {
     JPanel bloqueado = new JPanel(new GridBagLayout());
     bloqueado.setBackground(new Color(18, 18, 18));
-    JLabel lockLabel = new JLabel("🔒 Sigue esta cuenta para ver sus publicaciones");
+    JLabel lockLabel = new JLabel("Sigue esta cuenta para ver sus publicaciones");
     lockLabel.setFont(new Font("Arial", Font.PLAIN, 16));
     lockLabel.setForeground(new Color(160, 160, 160));
     bloqueado.add(lockLabel);
