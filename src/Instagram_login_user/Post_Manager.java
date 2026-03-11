@@ -1,6 +1,8 @@
 
 package Instagram_login_user;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.RandomAccessFile;
 
 /**
@@ -13,7 +15,16 @@ public class Post_Manager {
    private static final String POST_FILE = BASE_FOLDER+"/posts.ins";
    private RandomAccessFile postsFile;
    
-   
+   public Post_Manager(){
+       File base = new File(BASE_FOLDER);
+       if(!base.exists()) base.mkdir();
+       
+       try{
+         postsFile = new RandomAccessFile(POST_FILE,"rw");  
+       }catch(IOException e){
+           System.out.println("Error abriendo posts.ins"+e.getMessage());
+       }
+   }
     
     
     
