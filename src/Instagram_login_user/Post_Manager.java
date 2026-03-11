@@ -25,6 +25,11 @@ public class Post_Manager {
            System.out.println("Error abriendo posts.ins"+e.getMessage());
        }
    }
+   
+   
+   public boolean crearPost(String username, String contenido, String hashtags, String menciones, String rutaImagen, String tipoMedia){
+       
+   }
     
     
     
