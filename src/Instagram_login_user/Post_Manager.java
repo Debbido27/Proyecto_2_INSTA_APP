@@ -29,6 +29,20 @@ public class Post_Manager {
    
    public boolean crearPost(String username, String contenido, String hashtags, String menciones, String rutaImagen, String tipoMedia){
        
+       try{
+            postsFile.seek(postsFile.length());
+            postsFile.writeUTF(username);
+            postsFile.writeUTF(contenido);
+            postsFile.writeUTF(hashtags);
+            postsFile.writeUTF(menciones);
+            postsFile.writeUTF(rutaImagen);
+            postsFile.writeUTF(tipoMedia);
+            postsFile.writeLong(System.currentTimeMillis());
+            return true;    
+       }catch(IOException e){
+           System.out.println("Error creando post: "+e.getMessage());
+           return false;
+       }
    }
     
     
