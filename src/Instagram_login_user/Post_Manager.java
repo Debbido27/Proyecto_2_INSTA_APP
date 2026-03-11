@@ -1,6 +1,7 @@
 
 package Instagram_login_user;
 
+import Instagram_login_user.Base_cuenta.AccountType;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -45,23 +46,6 @@ public class Post_Manager {
        }
    }
     
-    public boolean crearPost(String username, String contenido, String hashtags,
-                              String menciones, String rutaImagen, String tipoMedia) {
-        try {
-            postsFile.seek(postsFile.length());
-            postsFile.writeUTF(username);
-            postsFile.writeUTF(contenido);
-            postsFile.writeUTF(hashtags);
-            postsFile.writeUTF(menciones);
-            postsFile.writeUTF(rutaImagen);
-            postsFile.writeUTF(tipoMedia);
-            postsFile.writeLong(System.currentTimeMillis());
-            return true;
-        } catch (IOException e) {
-            System.out.println("Error creando post: " + e.getMessage());
-            return false;
-        }
-    }
 
     public Post[] getPostsDeUsuario(String username) {
         Post[] temp = new Post[500];
@@ -139,6 +123,18 @@ public class Post_Manager {
         return resultado;
     }
     
+     private void ordenarPorFecha(Post[] posts) {
+        // Bubble sort descendente por fecha
+        for (int i = 0; i < posts.length - 1; i++) {
+            for (int j = 0; j < posts.length - i - 1; j++) {
+                if (posts[j].getFecha() < posts[j + 1].getFecha()) {
+                    Post temp = posts[j];
+                    posts[j] = posts[j + 1];
+                    posts[j + 1] = temp;
+                }
+            }
+        }
+    }
     
     
 }
