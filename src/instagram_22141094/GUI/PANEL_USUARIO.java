@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -176,15 +177,110 @@ public class PANEL_USUARIO extends JPanel{
 
     }
     
-    private JPanel crearInboxPanel(){
-        JPanel panel = new JPanel();
-        panel.setBackground(new Color(18,18,18));
-        JLabel label = new JLabel ("  ",JLabel.CENTER);
-        label.setFont(new Font("Arial",Font.BOLD,24));
-        label.setForeground(Color.WHITE);
-        panel.add(label);
-        return panel;
-    }
+    private JPanel crearInboxPanel() {
+    JPanel mainPanel = new JPanel(new BorderLayout());
+    mainPanel.setBackground(new Color(18, 18, 18));
+
+    // ─── SIDEBAR izquierdo ───────────────────────────────────────────
+    JPanel sidebar = new JPanel();
+    sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
+    sidebar.setBackground(new Color(0, 0, 0));
+    sidebar.setPreferredSize(new Dimension(300, 0));
+    sidebar.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, new Color(38, 38, 38)));
+
+    // Header "Mensajes"
+    JLabel inboxTitle = new JLabel("  ");
+    inboxTitle.setFont(new Font("Arial", Font.BOLD, 18));
+    inboxTitle.setForeground(Color.WHITE);
+    inboxTitle.setPreferredSize(new Dimension(300, 60));
+    inboxTitle.setMaximumSize(new Dimension(300, 60));
+    inboxTitle.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(38, 38, 38)));
+    sidebar.add(inboxTitle);
+
+    // Barra de búsqueda (solo visual, no hace nada)
+    JPanel searchPanel = new JPanel(new BorderLayout());
+    searchPanel.setBackground(new Color(0, 0, 0));
+    searchPanel.setMaximumSize(new Dimension(300, 55));
+    searchPanel.setPreferredSize(new Dimension(300, 55));
+    searchPanel.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
+
+    JTextField searchField = new JTextField("Buscar");
+    searchField.setBackground(new Color(38, 38, 38));
+    searchField.setForeground(new Color(168, 168, 168));
+    searchField.setFont(new Font("Arial", Font.PLAIN, 14));
+    searchField.setBorder(BorderFactory.createCompoundBorder(
+        BorderFactory.createLineBorder(new Color(54, 54, 54)),
+        BorderFactory.createEmptyBorder(6, 12, 6, 12)
+    ));
+    searchField.addFocusListener(new java.awt.event.FocusAdapter() {
+        public void focusGained(java.awt.event.FocusEvent e) {
+            if (searchField.getText().equals("Buscar")) {
+                searchField.setText("");
+                searchField.setForeground(Color.WHITE);
+            }
+        }
+        public void focusLost(java.awt.event.FocusEvent e) {
+            if (searchField.getText().isEmpty()) {
+                searchField.setText("Buscar");
+                searchField.setForeground(new Color(168, 168, 168));
+            }
+        }
+    });
+    searchPanel.add(searchField, BorderLayout.CENTER);
+    sidebar.add(searchPanel);
+
+    mainPanel.add(sidebar, BorderLayout.WEST);
+
+    // ─── ÁREA CENTRAL vacía ──────────────────────────────────────────
+    JPanel chatArea = new JPanel(new BorderLayout());
+    chatArea.setBackground(new Color(18, 18, 18));
+
+    // Espacio vacío de mensajes (cascarón)
+    JPanel emptyChat = new JPanel(new GridBagLayout());
+    emptyChat.setBackground(new Color(18, 18, 18));
+    JLabel emptyLabel = new JLabel("");
+    emptyLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+    emptyLabel.setForeground(new Color(80, 80, 80));
+    emptyChat.add(emptyLabel);
+    chatArea.add(emptyChat, BorderLayout.CENTER);
+
+    // Input de mensaje abajo (solo visual, no hace nada)
+    JPanel inputPanel = new JPanel(new BorderLayout());
+    inputPanel.setBackground(new Color(18, 18, 18));
+    inputPanel.setBorder(BorderFactory.createCompoundBorder(
+        BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(38, 38, 38)),
+        BorderFactory.createEmptyBorder(12, 15, 12, 15)
+    ));
+
+    JTextField messageField = new JTextField("Envía un mensaje...");
+    messageField.setBackground(new Color(38, 38, 38));
+    messageField.setForeground(new Color(168, 168, 168));
+    messageField.setFont(new Font("Arial", Font.PLAIN, 14));
+    messageField.setBorder(BorderFactory.createCompoundBorder(
+        BorderFactory.createLineBorder(new Color(80, 80, 80)),
+        BorderFactory.createEmptyBorder(10, 15, 10, 15)
+    ));
+    messageField.addFocusListener(new java.awt.event.FocusAdapter() {
+        public void focusGained(java.awt.event.FocusEvent e) {
+            if (messageField.getText().equals("Envía un mensaje...")) {
+                messageField.setText("");
+                messageField.setForeground(Color.WHITE);
+            }
+        }
+        public void focusLost(java.awt.event.FocusEvent e) {
+            if (messageField.getText().isEmpty()) {
+                messageField.setText("Envía un mensaje...");
+                messageField.setForeground(new Color(168, 168, 168));
+            }
+        }
+    });
+    inputPanel.add(messageField, BorderLayout.CENTER);
+    chatArea.add(inputPanel, BorderLayout.SOUTH);
+
+    mainPanel.add(chatArea, BorderLayout.CENTER);
+
+    return mainPanel;
+}
     
     private JPanel crearSubirPanel(){
         JPanel panel = new JPanel();
