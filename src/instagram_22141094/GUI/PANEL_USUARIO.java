@@ -5,6 +5,7 @@ import Instagram_login_user.Base_cuenta.AccountType;
 import Instagram_login_user.Base_cuenta.Gender;
 import Instagram_login_user.Followers_Manager;
 import Instagram_login_user.Login_Manager;
+import Instagram_login_user.Post_Manager;
 import Instagram_login_user.User;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -40,7 +41,7 @@ public class PANEL_USUARIO extends JPanel{
     private User userActual;
     Followers_Manager followersManager = new Followers_Manager();
     Login_Manager loginManager;
-    
+    Post_Manager postManager = new Post_Manager();
     
    public PANEL_USUARIO(String usuario, Login_Manager loginManager){
     this.usuario = usuario;
@@ -283,14 +284,8 @@ public class PANEL_USUARIO extends JPanel{
 }
     
     private JPanel crearSubirPanel(){
-        JPanel panel = new JPanel();
-        panel.setBackground(new Color(18,18,18));
-        JLabel label = new JLabel(" ",JLabel.CENTER);
-        label.setFont(new Font("Arial",Font.BOLD,24));
-        label.setForeground(Color.WHITE);
-        panel.add(label);
-        return panel;
-    }
+    return new PANEL_SUBIR(usuario, postManager);
+}
     
     private JPanel crearPerfilPanel(){
     JPanel panel = new JPanel(new GridBagLayout());
